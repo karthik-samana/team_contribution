@@ -247,6 +247,21 @@
     .qr-section p { font-size: 12px; color: #6b7280; margin-bottom: 12px; letter-spacing: 0.2px; }
     #qrcode { display: inline-block; padding: 14px; background: #fff; border-radius: 14px; }
 
+    /* ── UPI App Buttons ── */
+    .upi-apps-label { font-size: 11px; color: #6b7280; margin: 16px 0 10px; letter-spacing: 0.5px; }
+    .upi-apps-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 4px; }
+    .upi-app-btn {
+      flex: 1; min-width: 100px; padding: 12px 8px;
+      background: #1a1a24; border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px; text-align: center; text-decoration: none;
+      color: #e8e8e8; font-size: 13px; font-weight: 600;
+      font-family: 'Inter', sans-serif; transition: all 0.2s; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .upi-app-btn:hover { border-color: rgba(30,100,220,0.4); background: rgba(30,100,220,0.08); }
+    .upi-app-btn .app-icon { font-size: 20px; line-height: 1; }
+    .upi-app-btn .app-name { font-size: 11px; color: #9ca3af; font-weight: 500; }
+
     /* ── Confirmation ── */
     .confirm-section { padding: 0 24px 24px; display: none; }
     .confirm-section.visible { display: block; }
@@ -391,7 +406,7 @@
     <div class="form-section" id="formSection">
       <div class="form-group">
         <label for="nameInput">Your Name</label>
-        <input type="text" id="nameInput" placeholder="e.g. Rahul Sharma" maxlength="100" autocomplete="name" />
+        <input type="text" id="nameInput" placeholder="e.g. Ojas Gambheera" maxlength="100" autocomplete="name" />
       </div>
       <div class="form-group">
         <label for="amountInput">Amount</label>
@@ -413,6 +428,13 @@
       <div id="qrcode"></div>
 
       <a class="done-btn" id="btnUpiPay" href="#" style="display:block;text-align:center;text-decoration:none;margin-top:14px;">Open UPI App to Pay</a>
+
+      <div class="upi-apps-label">or pay directly with</div>
+      <div class="upi-apps-grid">
+        <a class="upi-app-btn" id="btnGpay" href="#"><span class="app-icon">G</span><span class="app-name">Google Pay</span></a>
+        <a class="upi-app-btn" id="btnPhonepe" href="#"><span class="app-icon">P</span><span class="app-name">PhonePe</span></a>
+        <a class="upi-app-btn" id="btnPaytm" href="#"><span class="app-icon">P</span><span class="app-name">Paytm</span></a>
+      </div>
 
       <div class="upi-or-divider">or copy UPI ID / phone number and pay manually</div>
 
@@ -617,10 +639,14 @@
       if (amount > 100000) { showStatus('Amount cannot exceed \u20B91,00,000.', 'error'); return; }
       hideStatus();
 
+      var txnId = 'TXN' + Date.now();
+      var amStr = (amount % 1 === 0) ? amount.toString() : amount.toFixed(2);
       var upiParams = 'pa=' + encodeURIComponent(CONFIG.UPI_ID)
         + '&pn=' + encodeURIComponent(CONFIG.PAYEE_NAME)
-        + '&am=' + amount.toFixed(2)
-        + '&cu=INR';
+        + '&am=' + amStr
+        + '&cu=INR'
+        + '&tn=' + encodeURIComponent(CONFIG.EVENT_NAME + ' - ' + name)
+        + '&tr=' + txnId;
       var upiUri = 'upi://pay?' + upiParams;
 
       var qrDiv = document.getElementById('qrcode');
@@ -630,7 +656,15 @@
       qr.make();
       qrDiv.innerHTML = qr.createImgTag(5, 8);
 
+      // Generic UPI link
       document.getElementById('btnUpiPay').href = upiUri;
+
+      // App-specific intent URLs (Android)
+      var intentBase = 'intent://pay?' + upiParams + '#Intent;scheme=upi;';
+      document.getElementById('btnGpay').href = intentBase + 'package=com.google.android.apps.nbu.paisa.user;end';
+      document.getElementById('btnPhonepe').href = intentBase + 'package=com.phonepe.app;end';
+      document.getElementById('btnPaytm').href = intentBase + 'package=net.one97.paytm;end';
+
       setStep(2);
     }
 
