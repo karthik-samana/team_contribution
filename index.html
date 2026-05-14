@@ -688,9 +688,9 @@
           + '&am=' + amStr + '&cu=INR'
           + '&tn=' + encodeURIComponent(CONFIG.EVENT_NAME + ' - ' + name)
           + '&tr=' + txnId;
-        document.getElementById('btnIosGpay').href = 'tez://upi/pay?' + iosParams;
+        document.getElementById('btnIosGpay').href = 'googlevpay://pay?' + iosParams;
         document.getElementById('btnIosPhonepe').href = 'phonepe://pay?' + iosParams;
-        document.getElementById('btnIosPaytm').href = 'paytm://upi/pay?' + iosParams;
+        document.getElementById('btnIosPaytm').href = 'paytmmp://pay?' + iosParams;
       } else {
         document.getElementById('btnUpiPay').style.display = '';
         document.getElementById('iosHint').style.display = 'none';
