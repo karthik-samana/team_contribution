@@ -8,7 +8,8 @@ ALTER TABLE settings ADD COLUMN IF NOT EXISTS deadline TIMESTAMPTZ DEFAULT NULL;
 ALTER TABLE settings ADD COLUMN IF NOT EXISTS theme TEXT DEFAULT 'amadeus';
 
 -- 2. Update the public view to include deadline and theme
-CREATE OR REPLACE VIEW public_settings AS
+DROP VIEW IF EXISTS public_settings;
+CREATE VIEW public_settings AS
 SELECT id, event_name, target_amount, message, is_active,
        upi_id, upi_number, payee_name, deadline, theme, updated_at
 FROM settings;
