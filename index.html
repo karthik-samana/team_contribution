@@ -427,6 +427,11 @@
       <p>Scan the QR code with any UPI app to pay</p>
       <div id="qrcode"></div>
 
+      <div id="iosHint" style="display:none;margin:14px 0 4px;padding:12px 16px;background:rgba(30,100,220,0.08);border-radius:12px;border:1px solid rgba(100,180,255,0.1);">
+        <div style="font-size:13px;color:#93c5fd;font-weight:600;margin-bottom:4px;">On iPhone?</div>
+        <div style="font-size:12px;color:#9ca3af;line-height:1.5;">Scan the QR code above using any UPI app, or copy the UPI ID below and paste it in your payment app.</div>
+      </div>
+
       <button class="done-btn" id="btnUpiPay" onclick="openUpiApp()" style="display:block;width:100%;margin-top:14px;">Open UPI App to Pay</button>
 
       <div class="upi-apps-label" id="appsLabel">or pay directly with</div>
@@ -661,10 +666,14 @@
       currentUpiUri = upiUri;
 
       if (isIOS) {
-        // iOS: hide Android intent buttons, show QR + copy as primary
+        // iOS: hide all deep link buttons (unreliable, WhatsApp intercepts upi://)
+        document.getElementById('btnUpiPay').style.display = 'none';
         document.getElementById('appsLabel').style.display = 'none';
         document.getElementById('appsGrid').style.display = 'none';
+        document.getElementById('iosHint').style.display = 'block';
       } else {
+        document.getElementById('btnUpiPay').style.display = '';
+        document.getElementById('iosHint').style.display = 'none';
         // Android: show app-specific intent buttons
         document.getElementById('appsLabel').style.display = '';
         document.getElementById('appsGrid').style.display = '';
