@@ -255,49 +255,33 @@
       padding: 8px;
     }
 
-    /* ── UPI App Chooser ── */
-    .upi-app-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      margin: 12px 0;
-    }
-    .upi-app-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 8px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      background: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      color: #333;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-    }
-    .upi-app-btn:hover {
-      border-color: #667eea;
-      background: #f0f0ff;
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(102,126,234,0.2);
-    }
-    .upi-app-btn .app-icon { font-size: 20px; }
-    .upi-app-btn.gpay { border-color: #4285F4; }
-    .upi-app-btn.gpay:hover { background: #e8f0fe; }
-    .upi-app-btn.phonepe { border-color: #5f259f; }
-    .upi-app-btn.phonepe:hover { background: #f3ecfc; }
-    .upi-app-btn.paytm { border-color: #00baf2; }
-    .upi-app-btn.paytm:hover { background: #e5f7fd; }
-    .upi-app-btn.generic { border-color: #28a745; }
-    .upi-app-btn.generic:hover { background: #e8f5e9; }
+    /* ── UPI Pay Button ── */
     .upi-or-divider {
       text-align: center;
       font-size: 12px;
       color: #aaa;
-      margin: 8px 0;
+      margin: 10px 0;
+    }
+    .upi-open-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin: 0;
+    }
+    .upi-open-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(102,126,234,0.4); }
+    body.theme-amadeus .upi-open-btn {
+      background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+      box-shadow: 0 4px 15px rgba(13,71,161,0.4);
     }
 
     /* ── Form ── */
@@ -463,21 +447,36 @@
       padding: 2px 8px;
       border-radius: 10px;
     }
-    .contributor-item {
+    .contributors-chips {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 12px;
-      background: #f8f9fa;
-      border-radius: 10px;
-      margin-bottom: 6px;
+      flex-wrap: wrap;
+      gap: 6px;
     }
-    .contributor-item .name { font-weight: 600; font-size: 14px; }
-    .contributor-item .time { font-size: 11px; color: #999; }
-    .contributor-item .amount {
-      font-weight: 700;
-      color: #667eea;
-      font-size: 15px;
+    .contrib-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      background: #f3f4f6;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #444;
+      border: 1px solid #e5e7eb;
+    }
+    .contrib-chip .chip-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #28a745;
+      flex-shrink: 0;
+    }
+    body.theme-amadeus .contrib-chip {
+      background: #e8f0fe;
+      border-color: #c5d9f5;
+      color: #1a3a5c;
+    }
+    body.theme-amadeus .contrib-chip .chip-dot {
+      background: #1976d2;
     }
     .no-contributors {
       text-align: center;
@@ -623,15 +622,12 @@
     body.theme-amadeus .quick-amt-btn.active {
       border-color: #1976d2; color: #1976d2; background: #e3f2fd;
     }
-    body.theme-amadeus .contributor-item .amount { color: #1565c0; }
     body.theme-amadeus .contributor-count { background: #0d47a1; }
     body.theme-amadeus .countdown-box {
       background: linear-gradient(135deg, #0d47a1 0%, #1e88e5 100%);
       box-shadow: 0 2px 10px rgba(13,71,161,0.3);
     }
-    body.theme-amadeus .upi-app-btn:hover {
-      box-shadow: 0 2px 12px rgba(13,71,161,0.25);
-    }
+
     body.theme-amadeus .message-content {
       background: linear-gradient(135deg, #e3f2fd 0%, #e8eaf6 100%);
       border-left-color: #0d47a1;
@@ -641,10 +637,7 @@
       background: rgba(10,25,47,0.6);
       color: rgba(100,180,255,0.5);
     }
-    body.theme-amadeus .contributor-item {
-      background: #f0f7ff;
-      border-left: 3px solid #1976d2;
-    }
+
     body.theme-amadeus .confirm-btn {
       background: #0d47a1;
     }
@@ -661,7 +654,7 @@
   <div class="card" style="position:relative; z-index:1;">
     <!-- Config Error (shown if Supabase not configured) -->
     <div class="config-error" id="configError">
-      <strong>⚠️ Setup Required</strong>
+      <strong>Setup Required</strong>
       <p style="margin-top:8px; font-size:14px;">Update the CONFIG section in this HTML file with your Supabase URL and Anon Key.</p>
       <code>See README.md for instructions</code>
     </div>
@@ -674,7 +667,7 @@
 
     <!-- Inactive Overlay -->
     <div class="inactive-overlay" id="inactiveOverlay">
-      <div class="icon">🔒</div>
+      <div class="icon" style="font-size:48px; margin-bottom:12px;">&#x1F6AB;</div>
       <h2>Contributions Closed</h2>
       <p>This collection is currently paused. Check back later!</p>
     </div>
@@ -711,7 +704,7 @@
 
     <!-- Countdown Timer -->
     <div class="countdown-section" id="countdownSection">
-      <div class="countdown-label">⏰ Time Remaining</div>
+      <div class="countdown-label">Time Remaining</div>
       <div class="countdown-boxes" id="countdownBoxes">
         <div class="countdown-box"><div class="num" id="cdDays">0</div><div class="unit">Days</div></div>
         <div class="countdown-box"><div class="num" id="cdHours">0</div><div class="unit">Hours</div></div>
@@ -766,20 +759,7 @@
 
       <div class="upi-or-divider">── or pay via app ──</div>
 
-      <div class="upi-app-grid" id="upiAppGrid">
-        <a class="upi-app-btn gpay" id="btnGpay" href="#">
-          <span class="app-icon">💰</span> Google Pay
-        </a>
-        <a class="upi-app-btn phonepe" id="btnPhonepe" href="#">
-          <span class="app-icon">📱</span> PhonePe
-        </a>
-        <a class="upi-app-btn paytm" id="btnPaytm" href="#">
-          <span class="app-icon">💳</span> Paytm
-        </a>
-        <a class="upi-app-btn generic" id="btnGenericUpi" href="#">
-          <span class="app-icon">🏦</span> Other UPI
-        </a>
-      </div>
+      <a class="upi-open-btn" id="btnUpiPay" href="#">Open UPI App to Pay</a>
 
       <p id="upiIdDisplay" style="margin-top:8px; font-size:13px; color:#555;"></p>
 
@@ -992,12 +972,8 @@
       qr.make();
       qrDiv.innerHTML = qr.createImgTag(5, 8);
 
-      // Set app-specific deep links using direct upi:// scheme
-      var upiLink = 'upi://pay?' + upiParams;
-      document.getElementById('btnGpay').href = upiLink;
-      document.getElementById('btnPhonepe').href = upiLink;
-      document.getElementById('btnPaytm').href = upiLink;
-      document.getElementById('btnGenericUpi').href = upiLink;
+      // Single UPI deep link — OS will show app chooser
+      document.getElementById('btnUpiPay').href = upiUri;
 
       setStep(2);
     }
@@ -1014,7 +990,7 @@
       if (diff <= 0) {
         clearInterval(countdownInterval);
         document.getElementById('countdownBoxes').innerHTML =
-          '<div class="countdown-expired">⏰ Time\'s up! Collection period has ended.</div>';
+          '<div class="countdown-expired">Time\'s up! Collection period has ended.</div>';
         // Disable form
         document.getElementById('payBtn').disabled = true;
         document.getElementById('payBtn').textContent = 'Deadline Passed';
@@ -1113,18 +1089,18 @@
         document.getElementById('contribCount').textContent = data.length;
 
         if (data.length === 0) {
-          listEl.innerHTML = '<div class="no-contributors">No contributions yet. Be the first! 🚀</div>';
+          listEl.innerHTML = '<div class="no-contributors">No contributions yet. Be the first!</div>';
           return;
         }
 
-        var html = '';
+        var html = '<div class="contributors-chips">';
         data.forEach(function(c) {
-          html += '<div class="contributor-item">'
-            + '<div><div class="name">' + escapeHtml(c.name) + '</div>'
-            + '<div class="time">' + escapeHtml(formatDate(c.created_at)) + '</div></div>'
-            + '<div class="amount">✅</div>'
+          html += '<div class="contrib-chip">'
+            + '<span class="chip-dot"></span>'
+            + escapeHtml(c.name)
             + '</div>';
         });
+        html += '</div>';
         listEl.innerHTML = html;
       })
       .catch(function() {
