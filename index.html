@@ -191,7 +191,7 @@
     .form-group input:focus { border-color: rgba(30,100,220,0.4); box-shadow: 0 0 0 3px rgba(30,100,220,0.1); }
     .amount-input-wrap { position: relative; }
     .amount-input-wrap::before {
-      content: '\u20B9'; position: absolute; left: 16px; top: 50%;
+      content: '\20B9'; position: absolute; left: 16px; top: 50%;
       transform: translateY(-50%); font-size: 16px; color: #6b7280; font-weight: 600;
     }
     .amount-input-wrap input { padding-left: 34px; }
@@ -412,6 +412,8 @@
       <p>Scan the QR code with any UPI app to pay</p>
       <div id="qrcode"></div>
 
+      <a class="done-btn" id="btnUpiPay" href="#" style="display:block;text-align:center;text-decoration:none;margin-top:14px;">Open UPI App to Pay</a>
+
       <div class="upi-or-divider">or copy UPI ID / phone number and pay manually</div>
 
       <div class="copy-upi-section">
@@ -627,6 +629,8 @@
       qr.addData(upiUri);
       qr.make();
       qrDiv.innerHTML = qr.createImgTag(5, 8);
+
+      document.getElementById('btnUpiPay').href = upiUri;
       setStep(2);
     }
 
