@@ -427,10 +427,10 @@
       <p>Scan the QR code with any UPI app to pay</p>
       <div id="qrcode"></div>
 
-      <a class="done-btn" id="btnUpiPay" href="#" style="display:block;text-align:center;text-decoration:none;margin-top:14px;">Open UPI App to Pay</a>
+      <button class="done-btn" id="btnUpiPay" onclick="openUpiApp()" style="display:block;width:100%;margin-top:14px;">Open UPI App to Pay</button>
 
-      <div class="upi-apps-label">or pay directly with</div>
-      <div class="upi-apps-grid">
+      <div class="upi-apps-label" id="appsLabel">or pay directly with</div>
+      <div class="upi-apps-grid" id="appsGrid">
         <a class="upi-app-btn" id="btnGpay" href="#"><span class="app-icon">G</span><span class="app-name">Google Pay</span></a>
         <a class="upi-app-btn" id="btnPhonepe" href="#"><span class="app-icon">P</span><span class="app-name">PhonePe</span></a>
         <a class="upi-app-btn" id="btnPaytm" href="#"><span class="app-icon">P</span><span class="app-name">Paytm</span></a>
@@ -489,6 +489,8 @@
     var countdownInterval = null;
     var deadlineDate = null;
     var currentStep = 1;
+    var currentUpiUri = '';
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     function supabaseHeaders() {
       return {
@@ -656,16 +658,27 @@
       qr.make();
       qrDiv.innerHTML = qr.createImgTag(5, 8);
 
-      // Generic UPI link
-      document.getElementById('btnUpiPay').href = upiUri;
+      currentUpiUri = upiUri;
 
-      // App-specific intent URLs (Android)
-      var intentBase = 'intent://pay?' + upiParams + '#Intent;scheme=upi;';
-      document.getElementById('btnGpay').href = intentBase + 'package=com.google.android.apps.nbu.paisa.user;end';
-      document.getElementById('btnPhonepe').href = intentBase + 'package=com.phonepe.app;end';
-      document.getElementById('btnPaytm').href = intentBase + 'package=net.one97.paytm;end';
+      if (isIOS) {
+        // iOS: hide Android intent buttons, show QR + copy as primary
+        document.getElementById('appsLabel').style.display = 'none';
+        document.getElementById('appsGrid').style.display = 'none';
+      } else {
+        // Android: show app-specific intent buttons
+        document.getElementById('appsLabel').style.display = '';
+        document.getElementById('appsGrid').style.display = '';
+        var intentBase = 'intent://pay?' + upiParams + '#Intent;scheme=upi;';
+        document.getElementById('btnGpay').href = intentBase + 'package=com.google.android.apps.nbu.paisa.user;end';
+        document.getElementById('btnPhonepe').href = intentBase + 'package=com.phonepe.app;end';
+        document.getElementById('btnPaytm').href = intentBase + 'package=net.one97.paytm;end';
+      }
 
       setStep(2);
+    }
+
+    function openUpiApp() {
+      window.location.href = currentUpiUri;
     }
 
     function showConfirm() { setStep(3); }
