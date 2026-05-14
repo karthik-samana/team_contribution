@@ -28,27 +28,42 @@
     }
     .bg-float {
       position: absolute;
-      opacity: 0.08;
-      font-size: 18px;
+      opacity: 0.06;
+      font-size: 16px;
       font-weight: 700;
       color: #fff;
       animation: floatUp linear infinite;
       white-space: nowrap;
       user-select: none;
+      letter-spacing: 1px;
     }
-    .bg-float.icon { font-size: 28px; opacity: 0.1; }
+    .bg-float.icon { font-size: 32px; opacity: 0.12; }
+    .bg-float.flight {
+      font-size: 40px;
+      opacity: 0.08;
+      animation-name: flyAcross;
+    }
     @keyframes floatUp {
       0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10%  { opacity: 0.08; }
-      90%  { opacity: 0.08; }
-      100% { transform: translateY(-120px) rotate(15deg); opacity: 0; }
+      10%  { opacity: 0.07; }
+      50%  { opacity: 0.1; }
+      90%  { opacity: 0.07; }
+      100% { transform: translateY(-120px) rotate(8deg); opacity: 0; }
     }
     .bg-float.icon { animation-name: floatUpIcon; }
     @keyframes floatUpIcon {
       0%   { transform: translateY(100vh) rotate(0deg) scale(1); opacity: 0; }
-      10%  { opacity: 0.1; }
-      90%  { opacity: 0.1; }
-      100% { transform: translateY(-120px) rotate(20deg) scale(1.1); opacity: 0; }
+      10%  { opacity: 0.12; }
+      50%  { opacity: 0.18; }
+      90%  { opacity: 0.12; }
+      100% { transform: translateY(-120px) rotate(10deg) scale(1.15); opacity: 0; }
+    }
+    @keyframes flyAcross {
+      0%   { transform: translate(-100px, 30vh) rotate(-5deg); opacity: 0; }
+      10%  { opacity: 0.08; }
+      50%  { opacity: 0.12; }
+      90%  { opacity: 0.08; }
+      100% { transform: translate(100vw, 10vh) rotate(5deg); opacity: 0; }
     }
     /* Subtle grid pattern overlay */
     .bg-grid {
@@ -525,19 +540,46 @@
 
     /* ── Theme: Amadeus Aviation ── */
     body.theme-amadeus {
-      background: linear-gradient(135deg, #0a1628 0%, #1a237e 40%, #0d47a1 70%, #01579b 100%);
+      background: linear-gradient(135deg, #020c1b 0%, #0a192f 30%, #112240 60%, #1d3461 100%);
+    }
+    body.theme-amadeus::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse 600px 200px at 20% 80%, rgba(0,150,255,0.08), transparent),
+        radial-gradient(ellipse 400px 300px at 80% 20%, rgba(100,180,255,0.06), transparent),
+        radial-gradient(ellipse 300px 300px at 50% 50%, rgba(0,100,200,0.04), transparent);
+      pointer-events: none;
+      z-index: 0;
+    }
+    body.theme-amadeus .bg-float {
+      color: rgba(100,200,255,0.9);
+      text-shadow: 0 0 8px rgba(100,180,255,0.3);
+    }
+    body.theme-amadeus .bg-float.icon {
+      opacity: 0.15;
+      filter: drop-shadow(0 0 4px rgba(100,180,255,0.4));
     }
     body.theme-amadeus .header {
-      background: linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #1976d2 100%);
+      background: linear-gradient(135deg, #0d47a1 0%, #1565c0 40%, #1e88e5 100%);
+      border-bottom: 2px solid rgba(100,180,255,0.2);
+    }
+    body.theme-amadeus .card {
+      background: rgba(255,255,255,0.97);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(100,180,255,0.1);
+      border: 1px solid rgba(100,180,255,0.08);
     }
     body.theme-amadeus .progress-bar-fill {
       background: linear-gradient(90deg, #0d47a1, #42a5f5);
     }
-    body.theme-amadeus .step.active { color: #42a5f5; }
+    body.theme-amadeus .step.active { color: #1e88e5; }
     body.theme-amadeus .step.active .step-num { background: #0d47a1; }
     body.theme-amadeus .form-group input:focus { border-color: #1976d2; }
     body.theme-amadeus .pay-btn {
       background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+      box-shadow: 0 4px 15px rgba(13,71,161,0.4);
     }
     body.theme-amadeus .quick-amt-btn:hover,
     body.theme-amadeus .quick-amt-btn.active {
@@ -546,13 +588,24 @@
     body.theme-amadeus .contributor-item .amount { color: #1565c0; }
     body.theme-amadeus .contributor-count { background: #0d47a1; }
     body.theme-amadeus .countdown-box {
-      background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+      background: linear-gradient(135deg, #0d47a1 0%, #1e88e5 100%);
+      box-shadow: 0 2px 10px rgba(13,71,161,0.3);
     }
     body.theme-amadeus .upi-app-btn:hover {
-      box-shadow: 0 2px 8px rgba(13,71,161,0.25);
+      box-shadow: 0 2px 12px rgba(13,71,161,0.25);
     }
-    body.theme-amadeus .card {
-      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    body.theme-amadeus .message-content {
+      background: linear-gradient(135deg, #e3f2fd 0%, #e8eaf6 100%);
+      border-left-color: #0d47a1;
+    }
+    body.theme-amadeus .message-toggle { color: #1565c0; }
+    body.theme-amadeus .footer {
+      background: rgba(10,25,47,0.6);
+      color: rgba(100,180,255,0.5);
+    }
+    body.theme-amadeus .contributor-item {
+      background: #f0f7ff;
+      border-left: 3px solid #1976d2;
     }
   </style>
 </head>
@@ -600,8 +653,8 @@
       <div class="message-content" id="messageContent"></div>
     </div>
 
-    <!-- Progress -->
-    <div class="progress-section">
+    <!-- Progress (hidden - admin only) -->
+    <div class="progress-section" style="display:none;">
       <div class="progress-amounts">
         <div>Collected<br/><strong id="totalCollected">₹0</strong></div>
         <div>Target<br/><strong id="targetAmount">₹0</strong></div>
@@ -872,8 +925,7 @@
       var upiParams = 'pa=' + encodeURIComponent(CONFIG.UPI_ID)
         + '&pn=' + encodeURIComponent(CONFIG.PAYEE_NAME)
         + '&am=' + amount.toFixed(2)
-        + '&cu=INR'
-        + '&tn=' + encodeURIComponent(CONFIG.EVENT_NAME + ' - ' + name);
+        + '&cu=INR';
 
       var upiUri = 'upi://pay?' + upiParams;
 
@@ -885,14 +937,12 @@
       qr.make();
       qrDiv.innerHTML = qr.createImgTag(5, 8);
 
-      // Set app-specific deep links (Android intents for reliable app targeting)
-      document.getElementById('btnGpay').href = 'intent://pay?' + upiParams
-        + '#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end';
-      document.getElementById('btnPhonepe').href = 'intent://pay?' + upiParams
-        + '#Intent;scheme=upi;package=com.phonepe.app;end';
-      document.getElementById('btnPaytm').href = 'intent://pay?' + upiParams
-        + '#Intent;scheme=upi;package=net.one97.paytm;end';
-      document.getElementById('btnGenericUpi').href = upiUri;
+      // Set app-specific deep links using direct upi:// scheme
+      var upiLink = 'upi://pay?' + upiParams;
+      document.getElementById('btnGpay').href = upiLink;
+      document.getElementById('btnPhonepe').href = upiLink;
+      document.getElementById('btnPaytm').href = upiLink;
+      document.getElementById('btnGenericUpi').href = upiLink;
 
       setStep(2);
     }
@@ -1017,7 +1067,7 @@
           html += '<div class="contributor-item">'
             + '<div><div class="name">' + escapeHtml(c.name) + '</div>'
             + '<div class="time">' + escapeHtml(formatDate(c.created_at)) + '</div></div>'
-            + '<div class="amount">₹' + parseFloat(c.amount).toLocaleString('en-IN') + '</div>'
+            + '<div class="amount">✅</div>'
             + '</div>';
         });
         listEl.innerHTML = html;
@@ -1057,23 +1107,22 @@
       'default': {
         className: '',
         items: ['✨', '⭐', '🎉', '🎊', '❤️', '💜', '🌟', '🎈'],
+        flights: []
       },
       'amadeus': {
         className: 'theme-amadeus',
         items: [
-          '✈️', '✈️', '✈️',
-          '🌍', '🌏', '📍',
+          '🌍', '🌏', '📍', '🌐',
           'HOT', 'RET', 'ITR',
           'PNR', 'GDS', '1A',
           'ARNK', 'SSR', 'TST',
-          '📄 HOT FILE', '📄 RET FILE',
-          '📊 REPORT', '📃 ITR',
-          '✈ ITINERARY', '🎫 TICKET',
-          '🛩️', '🚀', '🌐',
+          'HOT FILE', 'RET FILE',
+          'REPORT', 'ITINERARY',
           'AMADEUS', 'DOC TEAM',
           'FXP', 'FXD', 'FXA',
           'RT', 'IG', 'TTP'
         ],
+        flights: ['✈️', '🛩️', '✈️', '🛫', '🛬', '✈️']
       }
     };
 
@@ -1085,23 +1134,36 @@
         document.body.classList.add(theme.className);
       }
 
-      // Spawn floating background elements
       var canvas = document.getElementById('bgCanvas');
       canvas.innerHTML = '';
-      var items = theme.items;
-      var count = 25; // number of floating elements
 
+      // Spawn floating text elements
+      var items = theme.items;
+      var count = 30;
       for (var i = 0; i < count; i++) {
         var el = document.createElement('div');
         var item = items[Math.floor(Math.random() * items.length)];
-        var isIcon = item.length <= 3 && !/[A-Z]/.test(item); // emoji vs text
+        var isIcon = item.length <= 2;
         el.className = 'bg-float' + (isIcon ? ' icon' : '');
         el.textContent = item;
-        el.style.left = (Math.random() * 95) + '%';
-        el.style.animationDuration = (15 + Math.random() * 25) + 's';
-        el.style.animationDelay = (Math.random() * 20) + 's';
-        el.style.fontSize = isIcon ? (22 + Math.random() * 18) + 'px' : (12 + Math.random() * 8) + 'px';
+        el.style.left = (Math.random() * 92 + 2) + '%';
+        el.style.animationDuration = (18 + Math.random() * 30) + 's';
+        el.style.animationDelay = (Math.random() * 25) + 's';
+        el.style.fontSize = isIcon ? (24 + Math.random() * 20) + 'px' : (11 + Math.random() * 7) + 'px';
         canvas.appendChild(el);
+      }
+
+      // Spawn flying aircraft that go across the screen
+      var flights = theme.flights || [];
+      for (var j = 0; j < flights.length; j++) {
+        var plane = document.createElement('div');
+        plane.className = 'bg-float flight';
+        plane.textContent = flights[j];
+        plane.style.top = (10 + Math.random() * 70) + '%';
+        plane.style.animationDuration = (20 + Math.random() * 30) + 's';
+        plane.style.animationDelay = (j * 6 + Math.random() * 8) + 's';
+        plane.style.fontSize = (30 + Math.random() * 20) + 'px';
+        canvas.appendChild(plane);
       }
     }
   </script>
