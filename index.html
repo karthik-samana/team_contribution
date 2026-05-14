@@ -4,75 +4,57 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Team Contribution</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    /* ── Reset & Base ── */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #0a0a0f;
       min-height: 100vh;
       padding: 16px;
-      color: #333;
+      color: #e8e8e8;
       overflow-x: hidden;
       position: relative;
     }
 
     /* ── Animated Background ── */
     .bg-canvas {
-      position: fixed;
-      top: 0; left: 0;
+      position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
+      pointer-events: none; z-index: 0; overflow: hidden;
     }
-
-    /* Floating code/text tags */
     .bg-tag {
-      position: absolute;
-      opacity: 0;
-      font-family: 'Consolas', 'Courier New', monospace;
-      font-size: 12px;
-      font-weight: 600;
-      color: rgba(100,180,255,0.35);
+      position: absolute; opacity: 0;
+      font-family: 'Inter', monospace; font-size: 11px; font-weight: 600;
+      color: rgba(100,180,255,0.3);
       padding: 3px 8px;
-      border: 1px solid rgba(100,180,255,0.12);
+      border: 1px solid rgba(100,180,255,0.08);
       border-radius: 4px;
-      background: rgba(100,180,255,0.04);
+      background: rgba(100,180,255,0.03);
       animation: tagFloat linear infinite;
-      white-space: nowrap;
-      user-select: none;
-      letter-spacing: 1.5px;
-      backdrop-filter: blur(1px);
+      white-space: nowrap; user-select: none; letter-spacing: 1.5px;
     }
     @keyframes tagFloat {
       0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
       8%   { opacity: 1; }
-      50%  { opacity: 1; }
       92%  { opacity: 1; }
       100% { transform: translateY(-80px) rotate(3deg); opacity: 0; }
     }
-
-    /* SVG aircraft */
     .bg-plane {
-      position: absolute;
-      opacity: 0;
+      position: absolute; opacity: 0;
       animation: planeFly linear infinite;
-      filter: drop-shadow(0 0 6px rgba(100,180,255,0.3));
+      filter: drop-shadow(0 0 8px rgba(100,180,255,0.2));
     }
     @keyframes planeFly {
-      0%   { transform: translateX(-80px) translateY(0) rotate(0deg); opacity: 0; }
-      5%   { opacity: 0.15; }
-      50%  { opacity: 0.2; transform: translateX(50vw) translateY(-30px) rotate(0deg); }
-      95%  { opacity: 0.15; }
-      100% { transform: translateX(calc(100vw + 80px)) translateY(-60px) rotate(2deg); opacity: 0; }
+      0%   { transform: translateX(-80px) translateY(0); opacity: 0; }
+      5%   { opacity: 0.12; }
+      50%  { opacity: 0.18; transform: translateX(50vw) translateY(-30px); }
+      95%  { opacity: 0.12; }
+      100% { transform: translateX(calc(100vw + 80px)) translateY(-60px); opacity: 0; }
     }
-
-    /* Dotted route lines */
     .bg-route {
-      position: absolute;
-      height: 1px;
-      border-top: 2px dashed rgba(100,180,255,0.08);
+      position: absolute; height: 1px;
+      border-top: 2px dashed rgba(100,180,255,0.06);
       animation: routeFade ease-in-out infinite;
       transform-origin: left center;
     }
@@ -81,628 +63,315 @@
       20% { opacity: 1; }
       50% { width: 100%; opacity: 1; }
       80% { opacity: 1; }
-      100% { opacity: 0; width: 100%; }
     }
-
-    /* Radar ping */
     .bg-ping {
-      position: absolute;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: rgba(100,180,255,0.4);
+      position: absolute; width: 4px; height: 4px;
+      border-radius: 50%; background: rgba(100,180,255,0.35);
       animation: radarPing ease-out infinite;
     }
     .bg-ping::after {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      border: 1px solid rgba(100,180,255,0.3);
+      content: ''; position: absolute;
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 4px; height: 4px; border-radius: 50%;
+      border: 1px solid rgba(100,180,255,0.2);
       animation: pingRing ease-out infinite;
     }
     @keyframes radarPing {
       0%, 100% { opacity: 0; }
-      10% { opacity: 0.6; }
-      90% { opacity: 0.6; }
+      10% { opacity: 0.5; }
+      90% { opacity: 0.5; }
     }
     @keyframes pingRing {
-      0%   { width: 6px; height: 6px; opacity: 0.5; }
-      100% { width: 40px; height: 40px; opacity: 0; }
+      0%   { width: 4px; height: 4px; opacity: 0.4; }
+      100% { width: 36px; height: 36px; opacity: 0; }
+    }
+    body::before {
+      content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse 500px 300px at 10% 90%, rgba(30,100,220,0.06), transparent),
+        radial-gradient(ellipse 400px 250px at 90% 10%, rgba(50,130,255,0.04), transparent),
+        radial-gradient(ellipse 300px 300px at 50% 40%, rgba(20,80,180,0.03), transparent);
+      pointer-events: none; z-index: 0;
     }
 
-    /* Subtle grid pattern overlay */
-    .bg-grid {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-
-    /* ── Card Container ── */
+    /* ── Card ── */
     .card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-      max-width: 480px;
-      margin: 0 auto;
-      overflow: hidden;
+      background: #141418;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.6);
+      max-width: 480px; margin: 0 auto; overflow: hidden;
     }
 
     /* ── Header ── */
     .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-      padding: 28px 24px 20px;
-      text-align: center;
+      background: linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #1976d2 100%);
+      color: #fff; padding: 32px 24px 24px; text-align: center; position: relative;
     }
-    .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-    .header p { font-size: 14px; opacity: 0.9; }
-    .event-icon { font-size: 40px; margin-bottom: 8px; }
+    .header::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(100,180,255,0.3), transparent);
+    }
+    .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; letter-spacing: -0.3px; }
+    .header p { font-size: 13px; opacity: 0.8; font-weight: 400; letter-spacing: 0.3px; }
+    .event-icon { margin-bottom: 10px; }
 
-    /* ── Message Section ── */
-    .message-section {
-      padding: 16px 24px 4px;
-    }
+    /* ── Message ── */
+    .message-section { padding: 16px 24px 4px; }
     .message-toggle {
-      background: none;
-      border: none;
-      color: #667eea;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin: 0 auto;
+      background: none; border: none; color: #6ea8fe;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      margin: 0 auto; letter-spacing: 0.2px; font-family: 'Inter', sans-serif;
     }
-    .message-toggle:hover { text-decoration: underline; }
+    .message-toggle:hover { color: #93c5fd; }
     .message-content {
-      margin-top: 12px;
-      padding: 16px;
-      background: linear-gradient(135deg, #f8f0ff 0%, #eef2ff 100%);
-      border-radius: 12px;
-      border-left: 4px solid #764ba2;
-      font-size: 13.5px;
-      line-height: 1.7;
-      color: #444;
-      display: none;
+      margin-top: 12px; padding: 16px;
+      background: rgba(30,100,220,0.08); border-radius: 12px;
+      border-left: 3px solid #1976d2;
+      font-size: 13px; line-height: 1.75; color: #b0b8c8; display: none;
     }
     .message-content.visible { display: block; }
     .message-content p { margin-bottom: 10px; }
     .message-content p:last-child { margin-bottom: 0; }
 
-    /* ── Progress Section ── */
-    .progress-section {
-      padding: 20px 24px 12px;
-      text-align: center;
-    }
-    .progress-amounts {
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-      margin-bottom: 8px;
-      color: #555;
-    }
-    .progress-amounts strong { color: #333; font-size: 18px; }
-    .progress-bar-bg {
-      background: #e9ecef;
-      border-radius: 12px;
-      height: 14px;
-      overflow: hidden;
-    }
-    .progress-bar-fill {
-      background: linear-gradient(90deg, #667eea, #764ba2);
-      height: 100%;
-      border-radius: 12px;
-      transition: width 0.6s ease;
-      min-width: 0%;
-    }
-    .progress-percent {
-      font-size: 13px;
-      color: #888;
-      margin-top: 4px;
-    }
+    /* ── Progress (hidden by default) ── */
+    .progress-section { padding: 20px 24px 12px; text-align: center; }
+    .progress-amounts { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; color: #888; }
+    .progress-amounts strong { color: #e8e8e8; font-size: 18px; }
+    .progress-bar-bg { background: #1e1e26; border-radius: 12px; height: 6px; overflow: hidden; }
+    .progress-bar-fill { background: linear-gradient(90deg, #1565c0, #42a5f5); height: 100%; border-radius: 12px; transition: width 0.6s ease; }
+    .progress-percent { font-size: 12px; color: #666; margin-top: 4px; }
 
-    /* ── Countdown Timer ── */
-    .countdown-section {
-      padding: 12px 24px 4px;
-      text-align: center;
-      display: none;
-    }
+    /* ── Countdown ── */
+    .countdown-section { padding: 16px 24px 8px; text-align: center; display: none; }
     .countdown-section.visible { display: block; }
-    .countdown-label {
-      font-size: 12px;
-      color: #888;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-    }
-    .countdown-boxes {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-    }
+    .countdown-label { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; font-weight: 600; }
+    .countdown-boxes { display: flex; justify-content: center; gap: 8px; }
     .countdown-box {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-      border-radius: 10px;
-      padding: 8px 4px;
-      min-width: 58px;
-      text-align: center;
+      background: #1a1a24; border: 1px solid rgba(255,255,255,0.06);
+      color: #fff; border-radius: 12px; padding: 10px 4px; min-width: 60px; text-align: center;
     }
-    .countdown-box .num {
-      font-size: 22px;
-      font-weight: 800;
-      line-height: 1.2;
-    }
-    .countdown-box .unit {
-      font-size: 10px;
-      opacity: 0.85;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .countdown-expired {
-      color: #dc3545;
-      font-weight: 600;
-      font-size: 14px;
-      padding: 8px;
-    }
+    .countdown-box .num { font-size: 24px; font-weight: 800; line-height: 1.2; color: #6ea8fe; }
+    .countdown-box .unit { font-size: 9px; color: #6b7280; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+    .countdown-expired { color: #ef4444; font-weight: 600; font-size: 14px; padding: 8px; }
 
-    /* ── UPI Pay Button ── */
-    .upi-or-divider {
-      text-align: center;
-      font-size: 12px;
-      color: #aaa;
-      margin: 10px 0;
+    /* ── Copy UPI Section ── */
+    .upi-or-divider { text-align: center; font-size: 11px; color: #4b5563; margin: 14px 0; letter-spacing: 0.5px; }
+    .copy-upi-section {
+      display: flex; align-items: center; gap: 8px; margin: 12px 0;
+      padding: 14px 16px; background: #1a1a24;
+      border: 1px solid rgba(255,255,255,0.06); border-radius: 12px;
     }
-    .upi-open-btn {
-      display: block;
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      text-align: center;
-      transition: transform 0.15s, box-shadow 0.15s;
-      margin: 0;
+    .copy-upi-id { flex: 1; font-family: 'Inter', monospace; font-size: 14px; font-weight: 600; color: #93c5fd; letter-spacing: 0.3px; }
+    .copy-btn {
+      padding: 7px 16px; background: rgba(30,100,220,0.15); color: #6ea8fe;
+      border: 1px solid rgba(100,180,255,0.15); border-radius: 8px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      transition: all 0.2s; white-space: nowrap; font-family: 'Inter', sans-serif;
     }
-    .upi-open-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(102,126,234,0.4); }
-    body.theme-amadeus .upi-open-btn {
-      background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
-      box-shadow: 0 4px 15px rgba(13,71,161,0.4);
-    }
+    .copy-btn:hover { background: rgba(30,100,220,0.25); }
+    .copy-btn.copied { background: rgba(34,197,94,0.15); color: #4ade80; border-color: rgba(34,197,94,0.2); }
 
     /* ── Form ── */
-    .form-section { padding: 16px 24px 24px; }
-    .form-group { margin-bottom: 16px; }
+    .form-section { padding: 20px 24px 24px; }
+    .form-group { margin-bottom: 18px; }
     .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: #555;
-      margin-bottom: 6px;
+      display: block; font-size: 11px; font-weight: 600; color: #6b7280;
+      margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.8px;
     }
     .form-group input {
-      width: 100%;
-      padding: 12px 14px;
-      border: 2px solid #e0e0e0;
-      border-radius: 10px;
-      font-size: 15px;
-      transition: border-color 0.2s;
-      outline: none;
+      width: 100%; padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 12px;
+      font-size: 15px; font-family: 'Inter', sans-serif;
+      transition: all 0.2s; outline: none;
+      background: #1a1a24; color: #e8e8e8;
     }
-    .form-group input:focus { border-color: #667eea; }
+    .form-group input::placeholder { color: #4b5563; }
+    .form-group input:focus { border-color: rgba(30,100,220,0.4); box-shadow: 0 0 0 3px rgba(30,100,220,0.1); }
     .amount-input-wrap { position: relative; }
     .amount-input-wrap::before {
-      content: '₹';
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 16px;
-      color: #888;
-      font-weight: 600;
+      content: '\u20B9'; position: absolute; left: 16px; top: 50%;
+      transform: translateY(-50%); font-size: 16px; color: #6b7280; font-weight: 600;
     }
-    .amount-input-wrap input { padding-left: 32px; }
-    .quick-amounts {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-      flex-wrap: wrap;
-    }
+    .amount-input-wrap input { padding-left: 34px; }
+    .quick-amounts { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
     .quick-amt-btn {
-      flex: 1;
-      min-width: 60px;
-      padding: 8px 4px;
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      background: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      color: #555;
-      cursor: pointer;
-      transition: all 0.2s;
+      flex: 1; min-width: 60px; padding: 10px 4px;
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
+      background: #1a1a24; font-size: 14px; font-weight: 600;
+      color: #9ca3af; cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
     }
     .quick-amt-btn:hover, .quick-amt-btn.active {
-      border-color: #667eea;
-      color: #667eea;
-      background: #f0f0ff;
+      border-color: rgba(30,100,220,0.4); color: #6ea8fe; background: rgba(30,100,220,0.08);
     }
 
-    /* ── Pay Button ── */
+    /* ── Buttons ── */
     .pay-btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-      border: none;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s;
-      margin-top: 8px;
-      text-decoration: none;
-      display: block;
-      text-align: center;
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%);
+      color: #fff; border: none; border-radius: 14px;
+      font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif;
+      cursor: pointer; transition: all 0.2s; margin-top: 8px; letter-spacing: 0.3px;
     }
-    .pay-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(102,126,234,0.4); }
+    .pay-btn:hover { box-shadow: 0 4px 20px rgba(21,101,192,0.4); transform: translateY(-1px); }
     .pay-btn:active { transform: translateY(0); }
-    .pay-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
+    .pay-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .confirm-btn {
+      width: 100%; padding: 14px; background: #166534; color: #fff;
+      border: none; border-radius: 12px; font-size: 15px; font-weight: 600;
+      font-family: 'Inter', sans-serif; cursor: pointer; margin-top: 8px; transition: all 0.2s;
     }
+    .confirm-btn:hover { background: #15803d; }
+    .confirm-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .done-btn {
+      width: 100%; padding: 14px;
+      background: rgba(34,197,94,0.1); color: #4ade80;
+      border: 1px solid rgba(34,197,94,0.15); border-radius: 12px;
+      font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif;
+      cursor: pointer; margin-top: 14px; transition: all 0.2s;
+    }
+    .done-btn:hover { background: rgba(34,197,94,0.18); }
+
+    .back-link {
+      background: none; border: none; color: #6b7280; cursor: pointer;
+      font-size: 12px; margin-top: 10px; font-family: 'Inter', sans-serif; letter-spacing: 0.2px;
+    }
+    .back-link:hover { color: #9ca3af; }
 
     /* ── QR Section ── */
-    .qr-section {
-      padding: 12px 24px 20px;
-      text-align: center;
-      display: none;
-    }
+    .qr-section { padding: 16px 24px 20px; text-align: center; display: none; }
     .qr-section.visible { display: block; }
-    .qr-section p { font-size: 13px; color: #888; margin-bottom: 10px; }
-    #qrcode {
-      display: inline-block;
-      padding: 12px;
-      background: #fff;
-      border: 2px solid #e9ecef;
-      border-radius: 12px;
-    }
+    .qr-section p { font-size: 12px; color: #6b7280; margin-bottom: 12px; letter-spacing: 0.2px; }
+    #qrcode { display: inline-block; padding: 14px; background: #fff; border-radius: 14px; }
 
-    /* ── Confirmation Section ── */
-    .confirm-section {
-      padding: 0 24px 24px;
-      display: none;
-    }
+    /* ── Confirmation ── */
+    .confirm-section { padding: 0 24px 24px; display: none; }
     .confirm-section.visible { display: block; }
-    .confirm-section .divider {
-      border: none;
-      border-top: 1px solid #e9ecef;
-      margin: 0 0 16px;
-    }
-    .confirm-section h3 {
-      font-size: 15px;
-      color: #333;
-      margin-bottom: 12px;
-    }
-    .confirm-btn {
-      width: 100%;
-      padding: 12px;
-      background: #28a745;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 8px;
-      transition: background 0.2s;
-    }
-    .confirm-btn:hover { background: #218838; }
-    .confirm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .confirm-section .divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 0 0 16px; }
+    .confirm-section h3 { font-size: 14px; color: #e8e8e8; margin-bottom: 12px; font-weight: 600; }
 
-    /* ── Status Messages ── */
-    .status-msg {
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin: 12px 24px;
-      font-size: 14px;
-      display: none;
-    }
+    /* ── Status ── */
+    .status-msg { padding: 12px 16px; border-radius: 12px; margin: 12px 24px; font-size: 13px; display: none; }
     .status-msg.visible { display: block; }
-    .status-msg.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-    .status-msg.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .status-msg.success { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.15); }
+    .status-msg.error { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.15); }
 
-    /* ── Contributors List ── */
-    .contributors-section {
-      padding: 12px 24px 24px;
-      border-top: 1px solid #f0f0f0;
-    }
+    /* ── Contributors ── */
+    .contributors-section { padding: 16px 24px 24px; border-top: 1px solid rgba(255,255,255,0.04); }
     .contributors-section h3 {
-      font-size: 15px;
-      color: #333;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      font-size: 11px; color: #6b7280; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+      text-transform: uppercase; letter-spacing: 1px; font-weight: 600;
     }
     .contributor-count {
-      background: #667eea;
-      color: #fff;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 10px;
+      background: rgba(30,100,220,0.15); color: #6ea8fe;
+      font-size: 11px; padding: 2px 10px; border-radius: 10px; font-weight: 700;
     }
-    .contributors-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+    .contributors-chips { display: flex; flex-wrap: wrap; gap: 6px; }
     .contrib-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 12px;
-      background: #f3f4f6;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 500;
-      color: #444;
-      border: 1px solid #e5e7eb;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; background: rgba(255,255,255,0.04);
+      border-radius: 20px; font-size: 13px; font-weight: 500; color: #b0b8c8;
+      border: 1px solid rgba(255,255,255,0.06);
     }
-    .contrib-chip .chip-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #28a745;
-      flex-shrink: 0;
-    }
-    body.theme-amadeus .contrib-chip {
-      background: #e8f0fe;
-      border-color: #c5d9f5;
-      color: #1a3a5c;
-    }
-    body.theme-amadeus .contrib-chip .chip-dot {
-      background: #1976d2;
-    }
-    .no-contributors {
-      text-align: center;
-      color: #aaa;
-      font-size: 14px;
-      padding: 16px;
-    }
+    .contrib-chip .chip-dot { width: 5px; height: 5px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+    .no-contributors { text-align: center; color: #4b5563; font-size: 13px; padding: 20px; }
 
-    /* ── Loading Spinner ── */
+    /* ── Spinner ── */
     .spinner {
-      display: inline-block;
-      width: 18px;
-      height: 18px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      vertical-align: middle;
-      margin-right: 6px;
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.2); border-top-color: #fff;
+      border-radius: 50%; animation: spin 0.6s linear infinite;
+      vertical-align: middle; margin-right: 6px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     /* ── Footer ── */
-    .footer {
-      text-align: center;
-      padding: 12px;
-      font-size: 12px;
-      color: #ccc;
-      background: #f8f9fa;
-    }
+    .footer { text-align: center; padding: 14px; font-size: 11px; color: #374151; letter-spacing: 0.5px; }
 
-    /* ── Step Indicator ── */
-    .steps {
-      display: flex;
-      justify-content: center;
-      gap: 24px;
-      padding: 16px 24px 8px;
-    }
-    .step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 12px;
-      color: #ccc;
-    }
-    .step.active { color: #667eea; }
-    .step.done { color: #28a745; }
+    /* ── Steps ── */
+    .steps { display: flex; justify-content: center; gap: 28px; padding: 18px 24px 10px; }
+    .step { display: flex; flex-direction: column; align-items: center; font-size: 11px; color: #374151; font-weight: 500; letter-spacing: 0.3px; }
+    .step.active { color: #6ea8fe; }
+    .step.done { color: #4ade80; }
     .step-num {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
+      width: 30px; height: 30px; border-radius: 50%;
       border: 2px solid currentColor;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 12px; margin-bottom: 4px;
     }
-    .step.active .step-num { background: #667eea; color: #fff; }
-    .step.done .step-num { background: #28a745; color: #fff; border-color: #28a745; }
+    .step.active .step-num { background: #1565c0; color: #fff; border-color: #1565c0; }
+    .step.done .step-num { background: #166534; color: #fff; border-color: #166534; }
 
     /* ── Config Error ── */
-    .config-error {
-      padding: 24px;
-      text-align: center;
-      color: #721c24;
-      background: #f8d7da;
-      display: none;
-    }
+    .config-error { padding: 24px; text-align: center; color: #f87171; background: rgba(239,68,68,0.08); display: none; }
     .config-error.visible { display: block; }
-    .config-error code {
-      display: block;
-      margin-top: 8px;
-      font-size: 12px;
-      background: #fff;
-      padding: 8px;
-      border-radius: 6px;
-    }
+    .config-error code { display: block; margin-top: 8px; font-size: 12px; background: rgba(255,255,255,0.04); padding: 8px; border-radius: 8px; color: #9ca3af; }
 
-    /* ── Inactive Page Overlay ── */
-    .inactive-overlay {
-      display: none;
-      padding: 48px 24px;
-      text-align: center;
-    }
+    /* ── Inactive ── */
+    .inactive-overlay { display: none; padding: 48px 24px; text-align: center; }
     .inactive-overlay.visible { display: block; }
-    .inactive-overlay .icon { font-size: 48px; margin-bottom: 12px; }
-    .inactive-overlay h2 { font-size: 20px; color: #333; margin-bottom: 8px; }
-    .inactive-overlay p { font-size: 14px; color: #888; }
+    .inactive-overlay h2 { font-size: 20px; color: #e8e8e8; margin-bottom: 8px; font-weight: 700; }
+    .inactive-overlay p { font-size: 14px; color: #6b7280; }
 
-    /* ── Loading State ── */
-    .page-loading {
-      padding: 48px 24px;
-      text-align: center;
-    }
+    /* ── Loading ── */
+    .page-loading { padding: 48px 24px; text-align: center; }
     .page-loading .loader {
-      width: 40px; height: 40px;
-      border: 4px solid #e9ecef;
-      border-top-color: #667eea;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 12px;
+      width: 36px; height: 36px;
+      border: 3px solid rgba(255,255,255,0.06); border-top-color: #1976d2;
+      border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px;
     }
     .page-content { display: none; }
     .page-content.visible { display: block; }
-
-    /* ── Theme: Amadeus Aviation ── */
-    body.theme-amadeus {
-      background: linear-gradient(160deg, #020c1b 0%, #0a192f 30%, #112240 60%, #0d1b2a 100%);
-    }
-    body.theme-amadeus::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background:
-        radial-gradient(ellipse 600px 200px at 15% 85%, rgba(0,120,255,0.07), transparent),
-        radial-gradient(ellipse 500px 350px at 85% 15%, rgba(60,140,255,0.05), transparent),
-        radial-gradient(ellipse 300px 300px at 50% 50%, rgba(0,80,180,0.03), transparent);
-      pointer-events: none;
-      z-index: 0;
-    }
-    body.theme-amadeus .header {
-      background: linear-gradient(135deg, #0d47a1 0%, #1565c0 40%, #1e88e5 100%);
-      border-bottom: 2px solid rgba(100,180,255,0.15);
-    }
-    body.theme-amadeus .card {
-      background: rgba(255,255,255,0.97);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(100,180,255,0.08);
-    }
-    body.theme-amadeus .progress-bar-fill {
-      background: linear-gradient(90deg, #0d47a1, #42a5f5);
-    }
-    body.theme-amadeus .step.active { color: #1e88e5; }
-    body.theme-amadeus .step.active .step-num { background: #0d47a1; }
-    body.theme-amadeus .form-group input:focus { border-color: #1976d2; }
-    body.theme-amadeus .pay-btn {
-      background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
-      box-shadow: 0 4px 15px rgba(13,71,161,0.4);
-    }
-    body.theme-amadeus .quick-amt-btn:hover,
-    body.theme-amadeus .quick-amt-btn.active {
-      border-color: #1976d2; color: #1976d2; background: #e3f2fd;
-    }
-    body.theme-amadeus .contributor-count { background: #0d47a1; }
-    body.theme-amadeus .countdown-box {
-      background: linear-gradient(135deg, #0d47a1 0%, #1e88e5 100%);
-      box-shadow: 0 2px 10px rgba(13,71,161,0.3);
-    }
-
-    body.theme-amadeus .message-content {
-      background: linear-gradient(135deg, #e3f2fd 0%, #e8eaf6 100%);
-      border-left-color: #0d47a1;
-    }
-    body.theme-amadeus .message-toggle { color: #1565c0; }
-    body.theme-amadeus .footer {
-      background: rgba(10,25,47,0.6);
-      color: rgba(100,180,255,0.5);
-    }
-
-    body.theme-amadeus .confirm-btn {
-      background: #0d47a1;
-    }
-    body.theme-amadeus .confirm-btn:hover {
-      background: #1565c0;
-    }
   </style>
 </head>
 <body>
-  <!-- Animated Background -->
-  <div class="bg-grid"></div>
   <div class="bg-canvas" id="bgCanvas"></div>
 
   <div class="card" style="position:relative; z-index:1;">
-    <!-- Config Error (shown if Supabase not configured) -->
     <div class="config-error" id="configError">
       <strong>Setup Required</strong>
-      <p style="margin-top:8px; font-size:14px;">Update the CONFIG section in this HTML file with your Supabase URL and Anon Key.</p>
+      <p style="margin-top:8px; font-size:13px;">Update the CONFIG section with your Supabase URL and Anon Key.</p>
       <code>See README.md for instructions</code>
     </div>
 
-    <!-- Loading State -->
     <div class="page-loading" id="pageLoading">
       <div class="loader"></div>
-      <p style="color:#888; font-size:14px;">Loading...</p>
+      <p style="color:#6b7280; font-size:13px;">Loading...</p>
     </div>
 
-    <!-- Inactive Overlay -->
     <div class="inactive-overlay" id="inactiveOverlay">
-      <div class="icon" style="font-size:48px; margin-bottom:12px;">&#x1F6AB;</div>
       <h2>Contributions Closed</h2>
       <p>This collection is currently paused. Check back later!</p>
     </div>
 
-    <!-- Main Content (hidden until settings loaded) -->
     <div class="page-content" id="pageContent">
 
-    <!-- Header -->
     <div class="header">
-      <div class="event-icon" id="eventIcon" style="font-size:0;"></div>
+      <div class="event-icon" id="eventIcon"></div>
       <h1 id="eventTitle">Loading...</h1>
-      <p>Contribute & make it special!</p>
+      <p>Contribute & make it special</p>
     </div>
 
-    <!-- Message -->
     <div class="message-section" id="messageSection" style="display:none;">
       <button class="message-toggle" onclick="toggleMessage()">
-        Read our message for them <span id="msgArrow">▼</span>
+        Read our message for them <span id="msgArrow">&#x25BC;</span>
       </button>
       <div class="message-content" id="messageContent"></div>
     </div>
 
-    <!-- Progress (hidden - admin only) -->
     <div class="progress-section" style="display:none;">
       <div class="progress-amounts">
-        <div>Collected<br/><strong id="totalCollected">₹0</strong></div>
-        <div>Target<br/><strong id="targetAmount">₹0</strong></div>
+        <div>Collected<br/><strong id="totalCollected">&#x20B9;0</strong></div>
+        <div>Target<br/><strong id="targetAmount">&#x20B9;0</strong></div>
       </div>
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
-      </div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressBar" style="width: 0%"></div></div>
       <div class="progress-percent" id="progressPercent">0% collected</div>
     </div>
 
-    <!-- Countdown Timer -->
     <div class="countdown-section" id="countdownSection">
       <div class="countdown-label">Time Remaining</div>
       <div class="countdown-boxes" id="countdownBoxes">
@@ -713,23 +382,12 @@
       </div>
     </div>
 
-    <!-- Steps -->
     <div class="steps">
-      <div class="step active" id="step1">
-        <div class="step-num">1</div>
-        <span>Enter</span>
-      </div>
-      <div class="step" id="step2">
-        <div class="step-num">2</div>
-        <span>Pay</span>
-      </div>
-      <div class="step" id="step3">
-        <div class="step-num">3</div>
-        <span>Confirm</span>
-      </div>
+      <div class="step active" id="step1"><div class="step-num">1</div><span>Enter</span></div>
+      <div class="step" id="step2"><div class="step-num">2</div><span>Pay</span></div>
+      <div class="step" id="step3"><div class="step-num">3</div><span>Confirm</span></div>
     </div>
 
-    <!-- Step 1: Form -->
     <div class="form-section" id="formSection">
       <div class="form-group">
         <label for="nameInput">Your Name</label>
@@ -747,32 +405,25 @@
           <button class="quick-amt-btn" onclick="setAmount(2000)">2000</button>
         </div>
       </div>
-      <button class="pay-btn" id="payBtn" onclick="handlePay()">
-        Proceed to Pay
-      </button>
+      <button class="pay-btn" id="payBtn" onclick="handlePay()">Proceed to Pay</button>
     </div>
 
-    <!-- Step 2: QR + Payment -->
     <div class="qr-section" id="qrSection">
-      <p>Scan the QR code below, or choose your UPI app to pay</p>
+      <p>Scan the QR code with any UPI app to pay</p>
       <div id="qrcode"></div>
 
-      <div class="upi-or-divider">── or pay via app ──</div>
+      <div class="upi-or-divider">or copy UPI ID and pay manually</div>
 
-      <a class="upi-open-btn" id="btnUpiPay" href="#">Open UPI App to Pay</a>
+      <div class="copy-upi-section">
+        <span class="copy-upi-id" id="copyUpiId"></span>
+        <button class="copy-btn" id="copyUpiBtn" onclick="copyUpiId()">Copy</button>
+      </div>
 
-      <p id="upiIdDisplay" style="margin-top:8px; font-size:13px; color:#555;"></p>
-
-      <button class="pay-btn" onclick="showConfirm()" style="background:#28a745; margin-top:12px;">
-        I've Completed the Payment
-      </button>
+      <button class="done-btn" onclick="showConfirm()">I've Completed the Payment</button>
       <br/>
-      <button onclick="goBack()" style="background:none; border:none; color:#888; cursor:pointer; font-size:13px; margin-top:8px; text-decoration:underline;">
-        ← Go back & change details
-      </button>
+      <button class="back-link" onclick="goBack()">Go back & change details</button>
     </div>
 
-    <!-- Step 3: Confirmation -->
     <div class="confirm-section" id="confirmSection">
       <hr class="divider" />
       <h3>Confirm Your Payment</h3>
@@ -780,52 +431,31 @@
         <label for="upiRefInput">UPI Transaction Reference (optional)</label>
         <input type="text" id="upiRefInput" placeholder="e.g. 123456789012" maxlength="50" />
       </div>
-      <button class="confirm-btn" id="confirmBtn" onclick="submitPayment()">
-        Submit Confirmation
-      </button>
+      <button class="confirm-btn" id="confirmBtn" onclick="submitPayment()">Submit Confirmation</button>
     </div>
 
-    <!-- Status Message -->
     <div class="status-msg" id="statusMsg"></div>
 
-    <!-- Contributors List -->
     <div class="contributors-section">
-      <h3>
-        Contributors <span class="contributor-count" id="contribCount">0</span>
-      </h3>
-      <div id="contributorsList">
-        <div class="no-contributors">Loading contributions...</div>
-      </div>
+      <h3>Contributors <span class="contributor-count" id="contribCount">0</span></h3>
+      <div id="contributorsList"><div class="no-contributors">Loading contributions...</div></div>
     </div>
 
     <div class="footer">Team Contribution App</div>
 
-    </div><!-- end .page-content -->
+    </div>
   </div>
 
-  <!-- QR Code Library -->
   <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-
   <script>
-    // ================================================================
-    // CONFIGURATION — Only Supabase credentials needed here.
-    // Event settings are managed from the Admin page.
-    // ================================================================
     var SUPABASE_URL = "https://tyhiubwwiqxzwlbptvha.supabase.co";
     var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5aGl1Ynd3aXF4endsYnB0dmhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NDY5MDIsImV4cCI6MjA5NDMyMjkwMn0.11oJgFsdGBpjTWlSCyLxP30C9hUgCo7fBTu0dg7MFrY";
 
-    // Settings loaded from Supabase (populated on init)
     var CONFIG = {};
     var countdownInterval = null;
     var deadlineDate = null;
-
-    // ================================================================
-    // APP CODE
-    // ================================================================
-
     var currentStep = 1;
 
-    // ── Supabase REST helpers ──
     function supabaseHeaders() {
       return {
         'apikey': SUPABASE_ANON_KEY,
@@ -839,21 +469,17 @@
       return SUPABASE_URL + '/rest/v1/' + table + (query || '');
     }
 
-    // ── Init: Load settings from Supabase, then render page ──
     window.addEventListener('DOMContentLoaded', function() {
       fetch(supabaseUrl('public_settings', '?id=eq.1'), {
-        method: 'GET',
-        headers: supabaseHeaders()
+        method: 'GET', headers: supabaseHeaders()
       })
       .then(function(res) { return res.json(); })
       .then(function(data) {
         document.getElementById('pageLoading').style.display = 'none';
-
         if (!data || data.length === 0) {
           document.getElementById('configError').className = 'config-error visible';
           return;
         }
-
         var s = data[0];
         CONFIG = {
           EVENT_NAME: s.event_name,
@@ -862,20 +488,15 @@
           UPI_NUMBER: s.upi_number || '',
           PAYEE_NAME: s.payee_name || 'Team Contribution'
         };
-
-        // Check if page is active
         if (!s.is_active) {
           document.getElementById('inactiveOverlay').className = 'inactive-overlay visible';
           return;
         }
-
-        // Show main content
         document.getElementById('pageContent').className = 'page-content visible';
         document.getElementById('eventTitle').textContent = CONFIG.EVENT_NAME;
-        document.getElementById('targetAmount').textContent = '₹' + CONFIG.TARGET_AMOUNT.toLocaleString('en-IN');
-        document.getElementById('upiIdDisplay').textContent = 'UPI ID: ' + CONFIG.UPI_ID + '  |  UPI No: ' + CONFIG.UPI_NUMBER;
+        document.getElementById('targetAmount').textContent = '\u20B9' + CONFIG.TARGET_AMOUNT.toLocaleString('en-IN');
+        document.getElementById('copyUpiId').textContent = CONFIG.UPI_ID;
 
-        // Start countdown if deadline is set
         if (s.deadline) {
           deadlineDate = new Date(s.deadline);
           if (deadlineDate > new Date()) {
@@ -883,7 +504,6 @@
             updateCountdown();
             countdownInterval = setInterval(updateCountdown, 1000);
           } else {
-            // Deadline has passed
             document.getElementById('inactiveOverlay').querySelector('h2').textContent = 'Collection Deadline Passed';
             document.getElementById('inactiveOverlay').querySelector('p').textContent = 'The contribution period has ended. Thank you!';
             document.getElementById('inactiveOverlay').className = 'inactive-overlay visible';
@@ -891,8 +511,6 @@
             return;
           }
         }
-
-        // Render message if present
         if (s.message && s.message.trim()) {
           var paragraphs = s.message.split(/\n\n+/);
           var msgHtml = '';
@@ -902,19 +520,9 @@
           document.getElementById('messageContent').innerHTML = msgHtml;
           document.getElementById('messageSection').style.display = 'block';
         }
-
-        applyTheme(s.theme || 'amadeus');
-
-        // Set header icon based on theme
         var iconEl = document.getElementById('eventIcon');
-        if ((s.theme || 'amadeus') === 'amadeus') {
-          iconEl.style.fontSize = '0';
-          iconEl.appendChild(makePlaneSVG(48, 'rgba(255,255,255,0.9)'));
-        } else {
-          iconEl.style.fontSize = '40px';
-          iconEl.textContent = '\u{1F389}';
-        }
-
+        iconEl.appendChild(makePlaneSVG(44, 'rgba(255,255,255,0.85)'));
+        applyTheme();
         loadContributions();
       })
       .catch(function() {
@@ -923,7 +531,30 @@
       });
     });
 
-    // ── Quick Amount Buttons ──
+    function copyUpiId() {
+      var upiId = CONFIG.UPI_ID;
+      var btn = document.getElementById('copyUpiBtn');
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(upiId).then(function() {
+          btn.textContent = 'Copied';
+          btn.className = 'copy-btn copied';
+          setTimeout(function() { btn.textContent = 'Copy'; btn.className = 'copy-btn'; }, 2000);
+        });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = upiId;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = 'Copied';
+        btn.className = 'copy-btn copied';
+        setTimeout(function() { btn.textContent = 'Copy'; btn.className = 'copy-btn'; }, 2000);
+      }
+    }
+
     function setAmount(val) {
       document.getElementById('amountInput').value = val;
       document.querySelectorAll('.quick-amt-btn').forEach(function(btn) {
@@ -931,7 +562,6 @@
       });
     }
 
-    // ── Step Navigation ──
     function setStep(step) {
       currentStep = step;
       ['step1','step2','step3'].forEach(function(id, idx) {
@@ -945,83 +575,60 @@
       document.getElementById('confirmSection').className = step === 3 ? 'confirm-section visible' : 'confirm-section';
     }
 
-    // ── Handle Pay ──
     function handlePay() {
       var name = document.getElementById('nameInput').value.trim();
       var amount = parseFloat(document.getElementById('amountInput').value);
-
       if (!name) { showStatus('Please enter your name.', 'error'); return; }
       if (!amount || amount <= 0) { showStatus('Please enter a valid amount.', 'error'); return; }
-      if (amount > 100000) { showStatus('Amount cannot exceed ₹1,00,000.', 'error'); return; }
-
+      if (amount > 100000) { showStatus('Amount cannot exceed \u20B91,00,000.', 'error'); return; }
       hideStatus();
 
-      // Build UPI params
       var upiParams = 'pa=' + encodeURIComponent(CONFIG.UPI_ID)
         + '&pn=' + encodeURIComponent(CONFIG.PAYEE_NAME)
         + '&am=' + amount.toFixed(2)
         + '&cu=INR';
-
       var upiUri = 'upi://pay?' + upiParams;
 
-      // Generate QR Code (always uses generic upi:// scheme)
       var qrDiv = document.getElementById('qrcode');
       qrDiv.innerHTML = '';
       var qr = qrcode(0, 'M');
       qr.addData(upiUri);
       qr.make();
       qrDiv.innerHTML = qr.createImgTag(5, 8);
-
-      // Single UPI deep link — OS will show app chooser
-      document.getElementById('btnUpiPay').href = upiUri;
-
       setStep(2);
     }
 
     function showConfirm() { setStep(3); }
     function goBack() { hideStatus(); setStep(1); }
 
-    // ── Countdown Timer ──
     function updateCountdown() {
       if (!deadlineDate) return;
-      var now = new Date();
-      var diff = deadlineDate - now;
-
+      var diff = deadlineDate - new Date();
       if (diff <= 0) {
         clearInterval(countdownInterval);
         document.getElementById('countdownBoxes').innerHTML =
           '<div class="countdown-expired">Time\'s up! Collection period has ended.</div>';
-        // Disable form
         document.getElementById('payBtn').disabled = true;
         document.getElementById('payBtn').textContent = 'Deadline Passed';
         return;
       }
-
-      var days = Math.floor(diff / 86400000);
-      var hours = Math.floor((diff % 86400000) / 3600000);
-      var mins = Math.floor((diff % 3600000) / 60000);
-      var secs = Math.floor((diff % 60000) / 1000);
-
-      document.getElementById('cdDays').textContent = days;
-      document.getElementById('cdHours').textContent = hours;
-      document.getElementById('cdMins').textContent = mins;
-      document.getElementById('cdSecs').textContent = secs;
+      document.getElementById('cdDays').textContent = Math.floor(diff / 86400000);
+      document.getElementById('cdHours').textContent = Math.floor((diff % 86400000) / 3600000);
+      document.getElementById('cdMins').textContent = Math.floor((diff % 3600000) / 60000);
+      document.getElementById('cdSecs').textContent = Math.floor((diff % 60000) / 1000);
     }
 
-    // ── Toggle Message ──
     function toggleMessage() {
       var el = document.getElementById('messageContent');
       var arrow = document.getElementById('msgArrow');
       var visible = el.classList.toggle('visible');
-      arrow.textContent = visible ? '▲' : '▼';
+      arrow.innerHTML = visible ? '&#x25B2;' : '&#x25BC;';
     }
 
-    // ── Submit Payment Confirmation to Supabase ──
     function submitPayment() {
       var name = document.getElementById('nameInput').value.trim();
       var amount = parseFloat(document.getElementById('amountInput').value);
       var upiRef = document.getElementById('upiRefInput').value.trim();
-
       if (!name) { showStatus('Name is required.', 'error'); return; }
       if (isNaN(amount) || amount <= 0) { showStatus('Invalid amount.', 'error'); return; }
 
@@ -1030,24 +637,20 @@
       btn.innerHTML = '<span class="spinner"></span> Submitting...';
 
       fetch(supabaseUrl('contributions'), {
-        method: 'POST',
-        headers: supabaseHeaders(),
+        method: 'POST', headers: supabaseHeaders(),
         body: JSON.stringify({
-          name: name,
-          amount: amount,
-          upi_ref: upiRef,
-          event_name: CONFIG.EVENT_NAME,
-          status: 'Pending Verification'
+          name: name, amount: amount, upi_ref: upiRef,
+          event_name: CONFIG.EVENT_NAME, status: 'Pending Verification'
         })
       })
       .then(function(res) {
-        if (!res.ok) throw new Error('Failed to save');
+        if (!res.ok) throw new Error('Failed');
         return res.json();
       })
       .then(function() {
         btn.disabled = false;
         btn.textContent = 'Submit Confirmation';
-        showStatus('Thank you, ' + name + '! ₹' + amount.toLocaleString('en-IN') + ' recorded.', 'success');
+        showStatus('Thank you, ' + name + '! \u20B9' + amount.toLocaleString('en-IN') + ' recorded.', 'success');
         document.getElementById('nameInput').value = '';
         document.getElementById('amountInput').value = '';
         document.getElementById('upiRefInput').value = '';
@@ -1062,43 +665,33 @@
       });
     }
 
-    // ── Load Contributions from Supabase ──
     function loadContributions() {
       var query = '?event_name=eq.' + encodeURIComponent(CONFIG.EVENT_NAME)
-        + '&order=created_at.desc'
-        + '&select=name,amount,created_at,status';
-
+        + '&order=created_at.desc&select=name,amount,created_at,status';
       fetch(supabaseUrl('contributions', query), {
-        method: 'GET',
-        headers: supabaseHeaders()
+        method: 'GET', headers: supabaseHeaders()
       })
       .then(function(res) {
-        if (!res.ok) throw new Error('Failed to load');
+        if (!res.ok) throw new Error('Failed');
         return res.json();
       })
       .then(function(data) {
         var total = 0;
         data.forEach(function(c) { total += parseFloat(c.amount) || 0; });
-
         var pct = CONFIG.TARGET_AMOUNT > 0 ? Math.min(100, Math.round((total / CONFIG.TARGET_AMOUNT) * 100)) : 0;
-        document.getElementById('totalCollected').textContent = '₹' + total.toLocaleString('en-IN');
+        document.getElementById('totalCollected').textContent = '\u20B9' + total.toLocaleString('en-IN');
         document.getElementById('progressBar').style.width = pct + '%';
         document.getElementById('progressPercent').textContent = pct + '% collected';
 
         var listEl = document.getElementById('contributorsList');
         document.getElementById('contribCount').textContent = data.length;
-
         if (data.length === 0) {
           listEl.innerHTML = '<div class="no-contributors">No contributions yet. Be the first!</div>';
           return;
         }
-
         var html = '<div class="contributors-chips">';
         data.forEach(function(c) {
-          html += '<div class="contrib-chip">'
-            + '<span class="chip-dot"></span>'
-            + escapeHtml(c.name)
-            + '</div>';
+          html += '<div class="contrib-chip"><span class="chip-dot"></span>' + escapeHtml(c.name) + '</div>';
         });
         html += '</div>';
         listEl.innerHTML = html;
@@ -1109,170 +702,106 @@
       });
     }
 
-    // ── Helpers ──
     function showStatus(msg, type) {
       var el = document.getElementById('statusMsg');
       el.textContent = msg;
       el.className = 'status-msg visible ' + type;
     }
-    function hideStatus() {
-      document.getElementById('statusMsg').className = 'status-msg';
-    }
+    function hideStatus() { document.getElementById('statusMsg').className = 'status-msg'; }
     function escapeHtml(str) {
       var div = document.createElement('div');
       div.appendChild(document.createTextNode(str));
       return div.innerHTML;
     }
-    function formatDate(iso) {
-      var d = new Date(iso);
-      var m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      var h = d.getHours(), mn = d.getMinutes(), ap = h >= 12 ? 'PM' : 'AM';
-      h = h % 12 || 12;
-      return d.getDate() + ' ' + m[d.getMonth()] + ' ' + d.getFullYear() + ', ' + h + ':' + (mn < 10 ? '0' : '') + mn + ' ' + ap;
-    }
 
-    // ================================================================
-    // THEME SYSTEM — SVG-based realistic animations
-    // ================================================================
-
-    // SVG airplane silhouette
+    /* ── SVG Icons ── */
     function makePlaneSVG(size, color) {
-      var s = size || 50;
-      var c = color || 'rgba(100,180,255,0.2)';
       var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-      svg.setAttribute('width', s);
-      svg.setAttribute('height', s);
+      svg.setAttribute('width', size); svg.setAttribute('height', size);
       svg.setAttribute('viewBox', '0 0 512 512');
-      svg.innerHTML = '<path fill="' + c + '" d="M505.1 19.1C503.2 7.8 493.3 0 482 0c-6.2 0-12.1 2.6-16.3 7.1L339.9 133.2l-128.7-27.9c-3.6-.8-7.4.2-10.2 2.6L170.4 133 280 218.6l-54.4 54.4-67.4-21c-3.4-1.1-7.2-.2-9.8 2.4l-26 26 92.6 46.3 46.3 92.6 26-26c2.6-2.6 3.5-6.4 2.4-9.8l-21-67.4 54.4-54.4L409 272.8l25.1-30.6c2.4-2.8 3.4-6.6 2.6-10.2L408.8 104.1l126.1-126C539.4 -26.2 512.5-3.8 505.1 19.1z"/>';
+      svg.innerHTML = '<path fill="' + color + '" d="M505.1 19.1C503.2 7.8 493.3 0 482 0c-6.2 0-12.1 2.6-16.3 7.1L339.9 133.2l-128.7-27.9c-3.6-.8-7.4.2-10.2 2.6L170.4 133 280 218.6l-54.4 54.4-67.4-21c-3.4-1.1-7.2-.2-9.8 2.4l-26 26 92.6 46.3 46.3 92.6 26-26c2.6-2.6 3.5-6.4 2.4-9.8l-21-67.4 54.4-54.4L409 272.8l25.1-30.6c2.4-2.8 3.4-6.6 2.6-10.2L408.8 104.1l126.1-126C539.4 -26.2 512.5-3.8 505.1 19.1z"/>';
       return svg;
     }
-
-    // SVG document/file icon
     function makeDocSVG(size, color) {
-      var s = size || 30;
-      var c = color || 'rgba(100,180,255,0.15)';
       var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-      svg.setAttribute('width', s);
-      svg.setAttribute('height', s);
+      svg.setAttribute('width', size); svg.setAttribute('height', size);
       svg.setAttribute('viewBox', '0 0 24 24');
-      svg.innerHTML = '<path fill="' + c + '" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM7 17v-1h10v1H7zm0-3v-1h10v1H7zm0-3v-1h5v1H7z"/>';
+      svg.innerHTML = '<path fill="' + color + '" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM7 17v-1h10v1H7zm0-3v-1h10v1H7zm0-3v-1h5v1H7z"/>';
       return svg;
     }
-
-    // SVG globe
     function makeGlobeSVG(size, color) {
-      var s = size || 35;
-      var c = color || 'rgba(100,180,255,0.12)';
       var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-      svg.setAttribute('width', s);
-      svg.setAttribute('height', s);
+      svg.setAttribute('width', size); svg.setAttribute('height', size);
       svg.setAttribute('viewBox', '0 0 24 24');
-      svg.innerHTML = '<path fill="none" stroke="' + c + '" stroke-width="1.5" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 0c-2.8 0-5 4.5-5 10s2.2 10 5 10 5-4.5 5-10-2.2-10-5-10zM2 12h20"/>';
+      svg.innerHTML = '<path fill="none" stroke="' + color + '" stroke-width="1.5" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 0c-2.8 0-5 4.5-5 10s2.2 10 5 10 5-4.5 5-10-2.2-10-5-10zM2 12h20"/>';
       return svg;
     }
 
-    var THEMES = {
-      'default': { className: '' },
-      'amadeus': { className: 'theme-amadeus' }
-    };
-
-    function applyTheme(themeName) {
-      var theme = THEMES[themeName] || THEMES['default'];
-      if (theme.className) {
-        document.body.classList.add(theme.className);
-      }
-
+    /* ── Theme ── */
+    function applyTheme() {
       var canvas = document.getElementById('bgCanvas');
       canvas.innerHTML = '';
-
-      if (themeName !== 'amadeus') return;
-
-      // ── Layer 1: Floating DOC team tags ──
-      var tags = [
-        'HOT', 'RET', 'ITR', 'PNR', 'GDS', '1A',
-        'ARNK', 'SSR', 'TST', 'HOT FILE', 'RET FILE',
-        'AMADEUS', 'DOC TEAM', 'FXP', 'FXD', 'FXA',
-        'RT', 'IG', 'TTP', 'ITINERARY', 'REPORT',
-        'TICKET', 'BOOKING', 'PAX', 'SEG'
-      ];
-      for (var i = 0; i < 22; i++) {
+      var tags = ['HOT','RET','ITR','PNR','GDS','1A','ARNK','SSR','TST','HOT FILE','RET FILE',
+        'AMADEUS','DOC TEAM','FXP','FXD','FXA','RT','IG','TTP','ITINERARY','REPORT',
+        'TICKET','BOOKING','PAX','SEG'];
+      for (var i = 0; i < 20; i++) {
         var tag = document.createElement('div');
         tag.className = 'bg-tag';
         tag.textContent = tags[Math.floor(Math.random() * tags.length)];
-        tag.style.left = (Math.random() * 90 + 3) + '%';
-        tag.style.animationDuration = (22 + Math.random() * 35) + 's';
-        tag.style.animationDelay = (Math.random() * 30) + 's';
-        tag.style.fontSize = (10 + Math.random() * 5) + 'px';
+        tag.style.left = (Math.random() * 88 + 4) + '%';
+        tag.style.animationDuration = (24 + Math.random() * 35) + 's';
+        tag.style.animationDelay = (Math.random() * 28) + 's';
+        tag.style.fontSize = (10 + Math.random() * 4) + 'px';
         canvas.appendChild(tag);
       }
-
-      // ── Layer 2: Flying aircraft (SVG) ──
-      var planeColors = [
-        'rgba(100,180,255,0.18)',
-        'rgba(140,200,255,0.15)',
-        'rgba(80,160,240,0.12)',
-        'rgba(180,220,255,0.1)'
-      ];
+      var alphas = [0.14, 0.12, 0.1, 0.08, 0.12];
       for (var p = 0; p < 5; p++) {
         var wrap = document.createElement('div');
         wrap.className = 'bg-plane';
-        var sz = 35 + Math.random() * 35;
-        wrap.appendChild(makePlaneSVG(sz, planeColors[p % planeColors.length]));
-        wrap.style.top = (8 + p * 18 + Math.random() * 8) + '%';
-        wrap.style.animationDuration = (25 + Math.random() * 20) + 's';
-        wrap.style.animationDelay = (p * 7 + Math.random() * 5) + 's';
+        wrap.appendChild(makePlaneSVG(32 + Math.random() * 30, 'rgba(100,180,255,' + alphas[p] + ')'));
+        wrap.style.top = (6 + p * 18 + Math.random() * 8) + '%';
+        wrap.style.animationDuration = (28 + Math.random() * 22) + 's';
+        wrap.style.animationDelay = (p * 8 + Math.random() * 5) + 's';
         canvas.appendChild(wrap);
       }
-
-      // ── Layer 3: Document icons floating up ──
-      for (var d = 0; d < 6; d++) {
-        var docWrap = document.createElement('div');
-        docWrap.className = 'bg-tag';
-        docWrap.style.border = 'none';
-        docWrap.style.background = 'none';
-        docWrap.style.padding = '0';
-        docWrap.appendChild(makeDocSVG(22 + Math.random() * 14, 'rgba(100,180,255,' + (0.1 + Math.random() * 0.1) + ')'));
-        docWrap.style.left = (Math.random() * 90 + 5) + '%';
-        docWrap.style.animationDuration = (28 + Math.random() * 20) + 's';
-        docWrap.style.animationDelay = (Math.random() * 25) + 's';
-        canvas.appendChild(docWrap);
+      for (var d = 0; d < 5; d++) {
+        var dw = document.createElement('div');
+        dw.className = 'bg-tag';
+        dw.style.border = 'none'; dw.style.background = 'none'; dw.style.padding = '0';
+        dw.appendChild(makeDocSVG(20 + Math.random() * 12, 'rgba(100,180,255,' + (0.08 + Math.random() * 0.08) + ')'));
+        dw.style.left = (Math.random() * 88 + 5) + '%';
+        dw.style.animationDuration = (30 + Math.random() * 20) + 's';
+        dw.style.animationDelay = (Math.random() * 25) + 's';
+        canvas.appendChild(dw);
       }
-
-      // ── Layer 4: Globe icons ──
-      for (var g = 0; g < 4; g++) {
-        var globeWrap = document.createElement('div');
-        globeWrap.className = 'bg-tag';
-        globeWrap.style.border = 'none';
-        globeWrap.style.background = 'none';
-        globeWrap.style.padding = '0';
-        globeWrap.appendChild(makeGlobeSVG(28 + Math.random() * 18, 'rgba(100,180,255,' + (0.08 + Math.random() * 0.08) + ')'));
-        globeWrap.style.left = (Math.random() * 85 + 5) + '%';
-        globeWrap.style.animationDuration = (30 + Math.random() * 25) + 's';
-        globeWrap.style.animationDelay = (Math.random() * 30) + 's';
-        canvas.appendChild(globeWrap);
+      for (var g = 0; g < 3; g++) {
+        var gw = document.createElement('div');
+        gw.className = 'bg-tag';
+        gw.style.border = 'none'; gw.style.background = 'none'; gw.style.padding = '0';
+        gw.appendChild(makeGlobeSVG(24 + Math.random() * 16, 'rgba(100,180,255,' + (0.06 + Math.random() * 0.06) + ')'));
+        gw.style.left = (Math.random() * 85 + 5) + '%';
+        gw.style.animationDuration = (32 + Math.random() * 22) + 's';
+        gw.style.animationDelay = (Math.random() * 28) + 's';
+        canvas.appendChild(gw);
       }
-
-      // ── Layer 5: Route lines ──
-      for (var r = 0; r < 4; r++) {
+      for (var r = 0; r < 3; r++) {
         var route = document.createElement('div');
         route.className = 'bg-route';
-        route.style.top = (15 + r * 22 + Math.random() * 10) + '%';
+        route.style.top = (20 + r * 25 + Math.random() * 10) + '%';
         route.style.left = (Math.random() * 10) + '%';
-        route.style.width = (50 + Math.random() * 40) + '%';
-        route.style.animationDuration = (18 + Math.random() * 20) + 's';
-        route.style.animationDelay = (r * 5 + Math.random() * 10) + 's';
-        route.style.transform = 'rotate(' + (-3 + Math.random() * 6) + 'deg)';
+        route.style.width = (40 + Math.random() * 45) + '%';
+        route.style.animationDuration = (20 + Math.random() * 18) + 's';
+        route.style.animationDelay = (r * 6 + Math.random() * 8) + 's';
+        route.style.transform = 'rotate(' + (-2 + Math.random() * 4) + 'deg)';
         canvas.appendChild(route);
       }
-
-      // ── Layer 6: Radar pings ──
-      for (var q = 0; q < 5; q++) {
+      for (var q = 0; q < 4; q++) {
         var ping = document.createElement('div');
         ping.className = 'bg-ping';
-        ping.style.top = (10 + Math.random() * 80) + '%';
-        ping.style.left = (5 + Math.random() * 85) + '%';
-        ping.style.animationDuration = (4 + Math.random() * 6) + 's';
-        ping.style.animationDelay = (q * 2 + Math.random() * 4) + 's';
+        ping.style.top = (12 + Math.random() * 76) + '%';
+        ping.style.left = (8 + Math.random() * 82) + '%';
+        ping.style.animationDuration = (5 + Math.random() * 5) + 's';
+        ping.style.animationDelay = (q * 3 + Math.random() * 4) + 's';
         canvas.appendChild(ping);
       }
     }
