@@ -26,45 +26,92 @@
       z-index: 0;
       overflow: hidden;
     }
-    .bg-float {
+
+    /* Floating code/text tags */
+    .bg-tag {
       position: absolute;
-      opacity: 0.06;
-      font-size: 16px;
-      font-weight: 700;
-      color: #fff;
-      animation: floatUp linear infinite;
+      opacity: 0;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(100,180,255,0.35);
+      padding: 3px 8px;
+      border: 1px solid rgba(100,180,255,0.12);
+      border-radius: 4px;
+      background: rgba(100,180,255,0.04);
+      animation: tagFloat linear infinite;
       white-space: nowrap;
       user-select: none;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+      backdrop-filter: blur(1px);
     }
-    .bg-float.icon { font-size: 32px; opacity: 0.12; }
-    .bg-float.flight {
-      font-size: 40px;
-      opacity: 0.08;
-      animation-name: flyAcross;
-    }
-    @keyframes floatUp {
+    @keyframes tagFloat {
       0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10%  { opacity: 0.07; }
-      50%  { opacity: 0.1; }
-      90%  { opacity: 0.07; }
-      100% { transform: translateY(-120px) rotate(8deg); opacity: 0; }
+      8%   { opacity: 1; }
+      50%  { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { transform: translateY(-80px) rotate(3deg); opacity: 0; }
     }
-    .bg-float.icon { animation-name: floatUpIcon; }
-    @keyframes floatUpIcon {
-      0%   { transform: translateY(100vh) rotate(0deg) scale(1); opacity: 0; }
-      10%  { opacity: 0.12; }
-      50%  { opacity: 0.18; }
-      90%  { opacity: 0.12; }
-      100% { transform: translateY(-120px) rotate(10deg) scale(1.15); opacity: 0; }
+
+    /* SVG aircraft */
+    .bg-plane {
+      position: absolute;
+      opacity: 0;
+      animation: planeFly linear infinite;
+      filter: drop-shadow(0 0 6px rgba(100,180,255,0.3));
     }
-    @keyframes flyAcross {
-      0%   { transform: translate(-100px, 30vh) rotate(-5deg); opacity: 0; }
-      10%  { opacity: 0.08; }
-      50%  { opacity: 0.12; }
-      90%  { opacity: 0.08; }
-      100% { transform: translate(100vw, 10vh) rotate(5deg); opacity: 0; }
+    @keyframes planeFly {
+      0%   { transform: translateX(-80px) translateY(0) rotate(0deg); opacity: 0; }
+      5%   { opacity: 0.15; }
+      50%  { opacity: 0.2; transform: translateX(50vw) translateY(-30px) rotate(0deg); }
+      95%  { opacity: 0.15; }
+      100% { transform: translateX(calc(100vw + 80px)) translateY(-60px) rotate(2deg); opacity: 0; }
     }
+
+    /* Dotted route lines */
+    .bg-route {
+      position: absolute;
+      height: 1px;
+      border-top: 2px dashed rgba(100,180,255,0.08);
+      animation: routeFade ease-in-out infinite;
+      transform-origin: left center;
+    }
+    @keyframes routeFade {
+      0%, 100% { opacity: 0; width: 0; }
+      20% { opacity: 1; }
+      50% { width: 100%; opacity: 1; }
+      80% { opacity: 1; }
+      100% { opacity: 0; width: 100%; }
+    }
+
+    /* Radar ping */
+    .bg-ping {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(100,180,255,0.4);
+      animation: radarPing ease-out infinite;
+    }
+    .bg-ping::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      border: 1px solid rgba(100,180,255,0.3);
+      animation: pingRing ease-out infinite;
+    }
+    @keyframes radarPing {
+      0%, 100% { opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+    }
+    @keyframes pingRing {
+      0%   { width: 6px; height: 6px; opacity: 0.5; }
+      100% { width: 40px; height: 40px; opacity: 0; }
+    }
+
     /* Subtle grid pattern overlay */
     .bg-grid {
       position: fixed;
@@ -540,7 +587,7 @@
 
     /* ── Theme: Amadeus Aviation ── */
     body.theme-amadeus {
-      background: linear-gradient(135deg, #020c1b 0%, #0a192f 30%, #112240 60%, #1d3461 100%);
+      background: linear-gradient(160deg, #020c1b 0%, #0a192f 30%, #112240 60%, #0d1b2a 100%);
     }
     body.theme-amadeus::before {
       content: '';
@@ -548,28 +595,19 @@
       top: 0; left: 0;
       width: 100%; height: 100%;
       background:
-        radial-gradient(ellipse 600px 200px at 20% 80%, rgba(0,150,255,0.08), transparent),
-        radial-gradient(ellipse 400px 300px at 80% 20%, rgba(100,180,255,0.06), transparent),
-        radial-gradient(ellipse 300px 300px at 50% 50%, rgba(0,100,200,0.04), transparent);
+        radial-gradient(ellipse 600px 200px at 15% 85%, rgba(0,120,255,0.07), transparent),
+        radial-gradient(ellipse 500px 350px at 85% 15%, rgba(60,140,255,0.05), transparent),
+        radial-gradient(ellipse 300px 300px at 50% 50%, rgba(0,80,180,0.03), transparent);
       pointer-events: none;
       z-index: 0;
     }
-    body.theme-amadeus .bg-float {
-      color: rgba(100,200,255,0.9);
-      text-shadow: 0 0 8px rgba(100,180,255,0.3);
-    }
-    body.theme-amadeus .bg-float.icon {
-      opacity: 0.15;
-      filter: drop-shadow(0 0 4px rgba(100,180,255,0.4));
-    }
     body.theme-amadeus .header {
       background: linear-gradient(135deg, #0d47a1 0%, #1565c0 40%, #1e88e5 100%);
-      border-bottom: 2px solid rgba(100,180,255,0.2);
+      border-bottom: 2px solid rgba(100,180,255,0.15);
     }
     body.theme-amadeus .card {
       background: rgba(255,255,255,0.97);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 1px rgba(100,180,255,0.1);
-      border: 1px solid rgba(100,180,255,0.08);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(100,180,255,0.08);
     }
     body.theme-amadeus .progress-bar-fill {
       background: linear-gradient(90deg, #0d47a1, #42a5f5);
@@ -607,6 +645,12 @@
       background: #f0f7ff;
       border-left: 3px solid #1976d2;
     }
+    body.theme-amadeus .confirm-btn {
+      background: #0d47a1;
+    }
+    body.theme-amadeus .confirm-btn:hover {
+      background: #1565c0;
+    }
   </style>
 </head>
 <body>
@@ -640,7 +684,7 @@
 
     <!-- Header -->
     <div class="header">
-      <div class="event-icon">🎉</div>
+      <div class="event-icon" id="eventIcon" style="font-size:0;"></div>
       <h1 id="eventTitle">Loading...</h1>
       <p>Contribute & make it special!</p>
     </div>
@@ -648,7 +692,7 @@
     <!-- Message -->
     <div class="message-section" id="messageSection" style="display:none;">
       <button class="message-toggle" onclick="toggleMessage()">
-        💌 Read our message for them <span id="msgArrow">▼</span>
+        Read our message for them <span id="msgArrow">▼</span>
       </button>
       <div class="message-content" id="messageContent"></div>
     </div>
@@ -740,7 +784,7 @@
       <p id="upiIdDisplay" style="margin-top:8px; font-size:13px; color:#555;"></p>
 
       <button class="pay-btn" onclick="showConfirm()" style="background:#28a745; margin-top:12px;">
-        ✅ I've Completed the Payment
+        I've Completed the Payment
       </button>
       <br/>
       <button onclick="goBack()" style="background:none; border:none; color:#888; cursor:pointer; font-size:13px; margin-top:8px; text-decoration:underline;">
@@ -880,6 +924,17 @@
         }
 
         applyTheme(s.theme || 'amadeus');
+
+        // Set header icon based on theme
+        var iconEl = document.getElementById('eventIcon');
+        if ((s.theme || 'amadeus') === 'amadeus') {
+          iconEl.style.fontSize = '0';
+          iconEl.appendChild(makePlaneSVG(48, 'rgba(255,255,255,0.9)'));
+        } else {
+          iconEl.style.fontSize = '40px';
+          iconEl.textContent = '\u{1F389}';
+        }
+
         loadContributions();
       })
       .catch(function() {
@@ -1101,35 +1156,52 @@
     }
 
     // ================================================================
-    // THEME SYSTEM
+    // THEME SYSTEM — SVG-based realistic animations
     // ================================================================
+
+    // SVG airplane silhouette
+    function makePlaneSVG(size, color) {
+      var s = size || 50;
+      var c = color || 'rgba(100,180,255,0.2)';
+      var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('width', s);
+      svg.setAttribute('height', s);
+      svg.setAttribute('viewBox', '0 0 512 512');
+      svg.innerHTML = '<path fill="' + c + '" d="M505.1 19.1C503.2 7.8 493.3 0 482 0c-6.2 0-12.1 2.6-16.3 7.1L339.9 133.2l-128.7-27.9c-3.6-.8-7.4.2-10.2 2.6L170.4 133 280 218.6l-54.4 54.4-67.4-21c-3.4-1.1-7.2-.2-9.8 2.4l-26 26 92.6 46.3 46.3 92.6 26-26c2.6-2.6 3.5-6.4 2.4-9.8l-21-67.4 54.4-54.4L409 272.8l25.1-30.6c2.4-2.8 3.4-6.6 2.6-10.2L408.8 104.1l126.1-126C539.4 -26.2 512.5-3.8 505.1 19.1z"/>';
+      return svg;
+    }
+
+    // SVG document/file icon
+    function makeDocSVG(size, color) {
+      var s = size || 30;
+      var c = color || 'rgba(100,180,255,0.15)';
+      var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('width', s);
+      svg.setAttribute('height', s);
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.innerHTML = '<path fill="' + c + '" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM7 17v-1h10v1H7zm0-3v-1h10v1H7zm0-3v-1h5v1H7z"/>';
+      return svg;
+    }
+
+    // SVG globe
+    function makeGlobeSVG(size, color) {
+      var s = size || 35;
+      var c = color || 'rgba(100,180,255,0.12)';
+      var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('width', s);
+      svg.setAttribute('height', s);
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.innerHTML = '<path fill="none" stroke="' + c + '" stroke-width="1.5" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 0c-2.8 0-5 4.5-5 10s2.2 10 5 10 5-4.5 5-10-2.2-10-5-10zM2 12h20"/>';
+      return svg;
+    }
+
     var THEMES = {
-      'default': {
-        className: '',
-        items: ['✨', '⭐', '🎉', '🎊', '❤️', '💜', '🌟', '🎈'],
-        flights: []
-      },
-      'amadeus': {
-        className: 'theme-amadeus',
-        items: [
-          '🌍', '🌏', '📍', '🌐',
-          'HOT', 'RET', 'ITR',
-          'PNR', 'GDS', '1A',
-          'ARNK', 'SSR', 'TST',
-          'HOT FILE', 'RET FILE',
-          'REPORT', 'ITINERARY',
-          'AMADEUS', 'DOC TEAM',
-          'FXP', 'FXD', 'FXA',
-          'RT', 'IG', 'TTP'
-        ],
-        flights: ['✈️', '🛩️', '✈️', '🛫', '🛬', '✈️']
-      }
+      'default': { className: '' },
+      'amadeus': { className: 'theme-amadeus' }
     };
 
     function applyTheme(themeName) {
       var theme = THEMES[themeName] || THEMES['default'];
-
-      // Apply CSS class
       if (theme.className) {
         document.body.classList.add(theme.className);
       }
@@ -1137,33 +1209,95 @@
       var canvas = document.getElementById('bgCanvas');
       canvas.innerHTML = '';
 
-      // Spawn floating text elements
-      var items = theme.items;
-      var count = 30;
-      for (var i = 0; i < count; i++) {
-        var el = document.createElement('div');
-        var item = items[Math.floor(Math.random() * items.length)];
-        var isIcon = item.length <= 2;
-        el.className = 'bg-float' + (isIcon ? ' icon' : '');
-        el.textContent = item;
-        el.style.left = (Math.random() * 92 + 2) + '%';
-        el.style.animationDuration = (18 + Math.random() * 30) + 's';
-        el.style.animationDelay = (Math.random() * 25) + 's';
-        el.style.fontSize = isIcon ? (24 + Math.random() * 20) + 'px' : (11 + Math.random() * 7) + 'px';
-        canvas.appendChild(el);
+      if (themeName !== 'amadeus') return;
+
+      // ── Layer 1: Floating DOC team tags ──
+      var tags = [
+        'HOT', 'RET', 'ITR', 'PNR', 'GDS', '1A',
+        'ARNK', 'SSR', 'TST', 'HOT FILE', 'RET FILE',
+        'AMADEUS', 'DOC TEAM', 'FXP', 'FXD', 'FXA',
+        'RT', 'IG', 'TTP', 'ITINERARY', 'REPORT',
+        'TICKET', 'BOOKING', 'PAX', 'SEG'
+      ];
+      for (var i = 0; i < 22; i++) {
+        var tag = document.createElement('div');
+        tag.className = 'bg-tag';
+        tag.textContent = tags[Math.floor(Math.random() * tags.length)];
+        tag.style.left = (Math.random() * 90 + 3) + '%';
+        tag.style.animationDuration = (22 + Math.random() * 35) + 's';
+        tag.style.animationDelay = (Math.random() * 30) + 's';
+        tag.style.fontSize = (10 + Math.random() * 5) + 'px';
+        canvas.appendChild(tag);
       }
 
-      // Spawn flying aircraft that go across the screen
-      var flights = theme.flights || [];
-      for (var j = 0; j < flights.length; j++) {
-        var plane = document.createElement('div');
-        plane.className = 'bg-float flight';
-        plane.textContent = flights[j];
-        plane.style.top = (10 + Math.random() * 70) + '%';
-        plane.style.animationDuration = (20 + Math.random() * 30) + 's';
-        plane.style.animationDelay = (j * 6 + Math.random() * 8) + 's';
-        plane.style.fontSize = (30 + Math.random() * 20) + 'px';
-        canvas.appendChild(plane);
+      // ── Layer 2: Flying aircraft (SVG) ──
+      var planeColors = [
+        'rgba(100,180,255,0.18)',
+        'rgba(140,200,255,0.15)',
+        'rgba(80,160,240,0.12)',
+        'rgba(180,220,255,0.1)'
+      ];
+      for (var p = 0; p < 5; p++) {
+        var wrap = document.createElement('div');
+        wrap.className = 'bg-plane';
+        var sz = 35 + Math.random() * 35;
+        wrap.appendChild(makePlaneSVG(sz, planeColors[p % planeColors.length]));
+        wrap.style.top = (8 + p * 18 + Math.random() * 8) + '%';
+        wrap.style.animationDuration = (25 + Math.random() * 20) + 's';
+        wrap.style.animationDelay = (p * 7 + Math.random() * 5) + 's';
+        canvas.appendChild(wrap);
+      }
+
+      // ── Layer 3: Document icons floating up ──
+      for (var d = 0; d < 6; d++) {
+        var docWrap = document.createElement('div');
+        docWrap.className = 'bg-tag';
+        docWrap.style.border = 'none';
+        docWrap.style.background = 'none';
+        docWrap.style.padding = '0';
+        docWrap.appendChild(makeDocSVG(22 + Math.random() * 14, 'rgba(100,180,255,' + (0.1 + Math.random() * 0.1) + ')'));
+        docWrap.style.left = (Math.random() * 90 + 5) + '%';
+        docWrap.style.animationDuration = (28 + Math.random() * 20) + 's';
+        docWrap.style.animationDelay = (Math.random() * 25) + 's';
+        canvas.appendChild(docWrap);
+      }
+
+      // ── Layer 4: Globe icons ──
+      for (var g = 0; g < 4; g++) {
+        var globeWrap = document.createElement('div');
+        globeWrap.className = 'bg-tag';
+        globeWrap.style.border = 'none';
+        globeWrap.style.background = 'none';
+        globeWrap.style.padding = '0';
+        globeWrap.appendChild(makeGlobeSVG(28 + Math.random() * 18, 'rgba(100,180,255,' + (0.08 + Math.random() * 0.08) + ')'));
+        globeWrap.style.left = (Math.random() * 85 + 5) + '%';
+        globeWrap.style.animationDuration = (30 + Math.random() * 25) + 's';
+        globeWrap.style.animationDelay = (Math.random() * 30) + 's';
+        canvas.appendChild(globeWrap);
+      }
+
+      // ── Layer 5: Route lines ──
+      for (var r = 0; r < 4; r++) {
+        var route = document.createElement('div');
+        route.className = 'bg-route';
+        route.style.top = (15 + r * 22 + Math.random() * 10) + '%';
+        route.style.left = (Math.random() * 10) + '%';
+        route.style.width = (50 + Math.random() * 40) + '%';
+        route.style.animationDuration = (18 + Math.random() * 20) + 's';
+        route.style.animationDelay = (r * 5 + Math.random() * 10) + 's';
+        route.style.transform = 'rotate(' + (-3 + Math.random() * 6) + 'deg)';
+        canvas.appendChild(route);
+      }
+
+      // ── Layer 6: Radar pings ──
+      for (var q = 0; q < 5; q++) {
+        var ping = document.createElement('div');
+        ping.className = 'bg-ping';
+        ping.style.top = (10 + Math.random() * 80) + '%';
+        ping.style.left = (5 + Math.random() * 85) + '%';
+        ping.style.animationDuration = (4 + Math.random() * 6) + 's';
+        ping.style.animationDelay = (q * 2 + Math.random() * 4) + 's';
+        canvas.appendChild(ping);
       }
     }
   </script>
