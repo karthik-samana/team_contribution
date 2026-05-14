@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — Team Contribution</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    /* ── Top Bar ── */
+    .topbar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+    .topbar h1 { font-size: 18px; font-weight: 700; }
+    .topbar-actions { display: flex; gap: 12px; align-items: center; }
+    .topbar-btn {
+      padding: 6px 14px;
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .topbar-btn:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── Login ── */
+    .login-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      padding: 40px 32px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+    }
+    .login-card h2 { font-size: 22px; margin-bottom: 8px; }
+    .login-card p { font-size: 14px; color: #888; margin-bottom: 24px; }
+    .login-card input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .login-card input:focus { border-color: #667eea; }
+    .login-error {
+      color: #dc3545;
+      font-size: 13px;
+      margin-bottom: 12px;
+      display: none;
+    }
+    .login-error.visible { display: block; }
+
+    /* ── Dashboard ── */
+    .dashboard { display: none; }
+    .dashboard.visible { display: block; }
+    .container { max-width: 900px; margin: 0 auto; padding: 20px 16px; }
+
+    /* ── Status Banner ── */
+    .status-banner {
+      padding: 16px 20px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .status-banner.active { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .status-banner.inactive { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .toggle-btn {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .toggle-btn:hover { transform: translateY(-1px); }
+    .toggle-btn.stop { background: #dc3545; color: #fff; }
+    .toggle-btn.start { background: #28a745; color: #fff; }
+
+    /* ── Stats Row ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      text-align: center;
+    }
+    .stat-card .label { font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card .value { font-size: 24px; font-weight: 700; margin-top: 4px; color: #333; }
+    .stat-card .value.purple { color: #667eea; }
+    .stat-card .value.green { color: #28a745; }
+
+    /* ── Panels ── */
+    .panel {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 16px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .panel-header:hover { background: #fafafa; }
+    .panel-header .arrow { transition: transform 0.2s; }
+    .panel-header .arrow.collapsed { transform: rotate(-90deg); }
+    .panel-body { padding: 20px; }
+    .panel-body.collapsed { display: none; }
+
+    /* ── Form Elements ── */
+    .form-row { margin-bottom: 16px; }
+    .form-row label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    .form-row input, .form-row textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    .form-row input:focus, .form-row textarea:focus { border-color: #667eea; }
+    .form-row textarea { resize: vertical; min-height: 120px; }
+    .save-btn {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .save-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
+    .save-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+    .save-msg {
+      display: inline-block;
+      margin-left: 12px;
+      font-size: 13px;
+      color: #28a745;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .save-msg.visible { opacity: 1; }
+    .save-msg.error { color: #dc3545; }
+
+    /* ── Contributions Table ── */
+    .contrib-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .contrib-table th {
+      text-align: left;
+      padding: 10px 12px;
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #555;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .contrib-table td {
+      padding: 10px 12px;
+      border-top: 1px solid #f0f0f0;
+      vertical-align: middle;
+    }
+    .contrib-table tr:hover td { background: #fafafe; }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge.pending { background: #fff3cd; color: #856404; }
+    .badge.verified { background: #d4edda; color: #155724; }
+    .action-btn {
+      padding: 4px 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-right: 4px;
+      transition: transform 0.1s;
+    }
+    .action-btn:hover { transform: scale(1.05); }
+    .action-btn.verify { background: #28a745; color: #fff; }
+    .action-btn.unverify { background: #ffc107; color: #333; }
+    .action-btn.delete { background: #dc3545; color: #fff; }
+    .no-data { text-align: center; color: #aaa; padding: 24px; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      z-index: 1000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+    }
+    .toast.visible { transform: translateY(0); opacity: 1; }
+    .toast.success { background: #28a745; color: #fff; }
+    .toast.error { background: #dc3545; color: #fff; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .contrib-table { font-size: 12px; }
+      .contrib-table th, .contrib-table td { padding: 8px 6px; }
+      .topbar h1 { font-size: 15px; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ── Primary Button (reused) ── */
+    .btn-primary {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+    }
+    .btn-primary:hover { box-shadow: 0 4px 12px rgba(102,126,234,0.3); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Theme Selector ── */
+    .theme-option:hover { border-color: #667eea !important; background: #f8f9ff; }
+    .theme-option.selected { border-color: #667eea !important; background: #eef0ff; box-shadow: 0 0 0 3px rgba(102,126,234,0.15); }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════ LOGIN SCREEN ══════════ -->
+  <div class="login-wrap" id="loginScreen">
+    <div class="login-card">
+      <div style="font-size: 40px; margin-bottom: 12px;">🔐</div>
+      <h2>Admin Access</h2>
+      <p>Enter admin password to manage contributions</p>
+      <div class="login-error" id="loginError">Invalid password. Try again.</div>
+      <input type="password" id="loginPassword" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()" />
+      <button class="btn-primary" onclick="doLogin()" id="loginBtn">Login</button>
+    </div>
+  </div>
+
+  <!-- ══════════ DASHBOARD ══════════ -->
+  <div class="dashboard" id="dashboard">
+    <!-- Top Bar -->
+    <div class="topbar">
+      <h1>🛠️ Admin Dashboard</h1>
+      <div class="topbar-actions">
+        <a class="topbar-btn" href="index.html" target="_blank">👁️ View Page</a>
+        <button class="topbar-btn" onclick="doLogout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Status Banner -->
+      <div class="status-banner active" id="statusBanner">
+        <span id="statusText">🟢 Page is ACTIVE — Team members can contribute</span>
+        <button class="toggle-btn stop" id="toggleBtn" onclick="togglePageStatus()">Stop Page</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="label">Total Collected</div>
+          <div class="value purple" id="statTotal">₹0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Contributors</div>
+          <div class="value" id="statCount">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Target</div>
+          <div class="value" id="statTarget">₹0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Progress</div>
+          <div class="value green" id="statProgress">0%</div>
+        </div>
+      </div>
+
+      <!-- Event Settings -->
+      <div class="panel">
+        <div class="panel-header" onclick="togglePanel('eventPanel')">
+          <span>🎉 Event Settings</span>
+          <span class="arrow" id="eventPanelArrow">▼</span>
+        </div>
+        <div class="panel-body" id="eventPanel">
+          <div class="form-row">
+            <label>Event Name</label>
+            <input type="text" id="setEventName" maxlength="200" />
+          </div>
+          <div class="form-row">
+            <label>Target Amount (₹)</label>
+            <input type="number" id="setTargetAmount" min="0" />
+          </div>
+          <div class="form-row">
+            <label>Deadline (leave empty for no deadline)</label>
+            <input type="datetime-local" id="setDeadline" />
+            <div style="margin-top:6px;">
+              <button onclick="clearDeadline()" style="background:none; border:1px solid #dc3545; color:#dc3545; padding:4px 12px; border-radius:6px; font-size:12px; cursor:pointer;">Clear Deadline</button>
+              <span style="font-size:12px; color:#888; margin-left:8px;" id="deadlineStatus"></span>
+            </div>
+          </div>
+          <button class="save-btn" onclick="saveEventSettings()">Save Event Settings</button>
+          <span class="save-msg" id="eventMsg"></span>
+        </div>
+      </div>
+
+      <!-- Theme Settings -->
+      <div class="panel">
+        <div class="panel-header" onclick="togglePanel('themePanel')">
+          <span>🎨 Page Theme</span>
+          <span class="arrow" id="themePanelArrow">▼</span>
+        </div>
+        <div class="panel-body" id="themePanel">
+          <div class="form-row">
+            <label>Select Theme</label>
+            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;" id="themeGrid">
+              <div class="theme-option" data-theme="default" onclick="selectTheme('default')" style="padding:16px; border:2px solid #e0e0e0; border-radius:10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+                <div style="font-size:24px; margin-bottom:4px;">🎉</div>
+                <div style="font-size:13px; font-weight:600;">Default</div>
+                <div style="font-size:11px; color:#888;">Purple gradient, party vibes</div>
+              </div>
+              <div class="theme-option" data-theme="amadeus" onclick="selectTheme('amadeus')" style="padding:16px; border:2px solid #e0e0e0; border-radius:10px; text-align:center; cursor:pointer; transition:all 0.2s;">
+                <div style="font-size:24px; margin-bottom:4px;">✈️</div>
+                <div style="font-size:13px; font-weight:600;">Amadeus Aviation</div>
+                <div style="font-size:11px; color:#888;">Flights, HOT, RET, ITR, DOC Team</div>
+              </div>
+            </div>
+            <input type="hidden" id="setTheme" value="amadeus" />
+          </div>
+          <button class="save-btn" onclick="saveTheme()">Save Theme</button>
+          <span class="save-msg" id="themeMsg"></span>
+        </div>
+      </div>
+
+      <!-- UPI Settings -->
+      <div class="panel">
+        <div class="panel-header" onclick="togglePanel('upiPanel')">
+          <span>💳 UPI Settings</span>
+          <span class="arrow" id="upiPanelArrow">▼</span>
+        </div>
+        <div class="panel-body" id="upiPanel">
+          <div class="form-row">
+            <label>UPI ID</label>
+            <input type="text" id="setUpiId" maxlength="100" />
+          </div>
+          <div class="form-row">
+            <label>UPI Number</label>
+            <input type="text" id="setUpiNumber" maxlength="20" />
+          </div>
+          <div class="form-row">
+            <label>Payee Name (shown in UPI apps)</label>
+            <input type="text" id="setPayeeName" maxlength="100" />
+          </div>
+          <button class="save-btn" onclick="saveUpiSettings()">Save UPI Settings</button>
+          <span class="save-msg" id="upiMsg"></span>
+        </div>
+      </div>
+
+      <!-- Message -->
+      <div class="panel">
+        <div class="panel-header" onclick="togglePanel('msgPanel')">
+          <span>💌 Page Message</span>
+          <span class="arrow" id="msgPanelArrow">▼</span>
+        </div>
+        <div class="panel-body" id="msgPanel">
+          <div class="form-row">
+            <label>Message (separate paragraphs with blank lines)</label>
+            <textarea id="setMessage" rows="8"></textarea>
+          </div>
+          <button class="save-btn" onclick="saveMessage()">Save Message</button>
+          <span class="save-msg" id="messageMsg"></span>
+        </div>
+      </div>
+
+      <!-- Change Password -->
+      <div class="panel">
+        <div class="panel-header" onclick="togglePanel('pwdPanel')">
+          <span>🔑 Change Admin Password</span>
+          <span class="arrow collapsed" id="pwdPanelArrow">▼</span>
+        </div>
+        <div class="panel-body collapsed" id="pwdPanel">
+          <div class="form-row">
+            <label>New Password</label>
+            <input type="password" id="setNewPassword" />
+          </div>
+          <div class="form-row">
+            <label>Confirm New Password</label>
+            <input type="password" id="setConfirmPassword" />
+          </div>
+          <button class="save-btn" onclick="changePassword()">Update Password</button>
+          <span class="save-msg" id="pwdMsg"></span>
+        </div>
+      </div>
+
+      <!-- Contributions -->
+      <div class="panel">
+        <div class="panel-header" onclick="togglePanel('contribPanel')">
+          <span>📋 Contributions</span>
+          <span class="arrow" id="contribPanelArrow">▼</span>
+        </div>
+        <div class="panel-body" id="contribPanel">
+          <div style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 13px; color: #888;" id="contribInfo">Loading...</span>
+            <button class="save-btn" onclick="loadContributions()" style="padding: 6px 14px; font-size: 12px;">🔄 Refresh</button>
+          </div>
+          <div style="overflow-x: auto;">
+            <table class="contrib-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Amount</th>
+                  <th>UPI Ref</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="contribBody">
+                <tr><td colspan="6" class="no-data">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ================================================================
+    // CONFIGURATION — Same Supabase credentials as index.html
+    // ================================================================
+    var SUPABASE_URL = "https://tyhiubwwiqxzwlbptvha.supabase.co";
+    var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5aGl1Ynd3aXF4endsYnB0dmhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NDY5MDIsImV4cCI6MjA5NDMyMjkwMn0.11oJgFsdGBpjTWlSCyLxP30C9hUgCo7fBTu0dg7MFrY";
+
+    // ================================================================
+    // STATE
+    // ================================================================
+    var adminPassword = '';
+    var settings = {};
+    var contributions = [];
+
+    // ================================================================
+    // SUPABASE HELPERS
+    // ================================================================
+    function sbHeaders() {
+      return {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json'
+      };
+    }
+
+    function sbRpc(fnName, params) {
+      return fetch(SUPABASE_URL + '/rest/v1/rpc/' + fnName, {
+        method: 'POST',
+        headers: sbHeaders(),
+        body: JSON.stringify(params)
+      }).then(function(r) { return r.json(); });
+    }
+
+    function sbGet(path) {
+      return fetch(SUPABASE_URL + '/rest/v1/' + path, {
+        method: 'GET',
+        headers: sbHeaders()
+      }).then(function(r) { return r.json(); });
+    }
+
+    // ================================================================
+    // LOGIN / LOGOUT
+    // ================================================================
+    function doLogin() {
+      var pwd = document.getElementById('loginPassword').value.trim();
+      if (!pwd) return;
+
+      var btn = document.getElementById('loginBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Verifying...';
+
+      sbRpc('verify_admin', { pwd: pwd })
+        .then(function(result) {
+          btn.disabled = false;
+          btn.textContent = 'Login';
+          if (result === true) {
+            adminPassword = pwd;
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboard').className = 'dashboard visible';
+            loadDashboard();
+          } else {
+            document.getElementById('loginError').className = 'login-error visible';
+          }
+        })
+        .catch(function() {
+          btn.disabled = false;
+          btn.textContent = 'Login';
+          document.getElementById('loginError').textContent = 'Connection error. Check Supabase config.';
+          document.getElementById('loginError').className = 'login-error visible';
+        });
+    }
+
+    function doLogout() {
+      adminPassword = '';
+      document.getElementById('dashboard').className = 'dashboard';
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('loginPassword').value = '';
+      document.getElementById('loginError').className = 'login-error';
+    }
+
+    // ================================================================
+    // LOAD DASHBOARD
+    // ================================================================
+    function loadDashboard() {
+      loadSettings();
+      loadContributions();
+    }
+
+    function loadSettings() {
+      sbGet('public_settings?id=eq.1')
+        .then(function(data) {
+          if (data && data.length > 0) {
+            settings = data[0];
+            populateSettingsForm();
+            updateStatusBanner();
+          }
+        });
+    }
+
+    function populateSettingsForm() {
+      document.getElementById('setEventName').value = settings.event_name || '';
+      document.getElementById('setTargetAmount').value = settings.target_amount || 0;
+      document.getElementById('setUpiId').value = settings.upi_id || '';
+      document.getElementById('setUpiNumber').value = settings.upi_number || '';
+      document.getElementById('setPayeeName').value = settings.payee_name || '';
+      document.getElementById('setMessage').value = settings.message || '';
+      document.getElementById('statTarget').textContent = '₹' + (settings.target_amount || 0).toLocaleString('en-IN');
+
+      // Deadline
+      if (settings.deadline) {
+        var dl = new Date(settings.deadline);
+        // Format for datetime-local input: YYYY-MM-DDTHH:MM
+        var pad = function(n) { return n < 10 ? '0' + n : n; };
+        var dlStr = dl.getFullYear() + '-' + pad(dl.getMonth()+1) + '-' + pad(dl.getDate())
+          + 'T' + pad(dl.getHours()) + ':' + pad(dl.getMinutes());
+        document.getElementById('setDeadline').value = dlStr;
+        var remaining = dl - new Date();
+        if (remaining > 0) {
+          var days = Math.floor(remaining / 86400000);
+          var hrs = Math.floor((remaining % 86400000) / 3600000);
+          document.getElementById('deadlineStatus').textContent = days + 'd ' + hrs + 'h remaining';
+        } else {
+          document.getElementById('deadlineStatus').textContent = '⚠️ Deadline has passed!';
+          document.getElementById('deadlineStatus').style.color = '#dc3545';
+        }
+      } else {
+        document.getElementById('setDeadline').value = '';
+        document.getElementById('deadlineStatus').textContent = 'No deadline set';
+      }
+
+      // Theme
+      var currentTheme = settings.theme || 'amadeus';
+      selectTheme(currentTheme);
+    }
+
+    function updateStatusBanner() {
+      var banner = document.getElementById('statusBanner');
+      var text = document.getElementById('statusText');
+      var btn = document.getElementById('toggleBtn');
+
+      if (settings.is_active) {
+        banner.className = 'status-banner active';
+        text.textContent = '🟢 Page is ACTIVE — Team members can contribute';
+        btn.textContent = 'Stop Page';
+        btn.className = 'toggle-btn stop';
+      } else {
+        banner.className = 'status-banner inactive';
+        text.textContent = '🔴 Page is STOPPED — Contributions are paused';
+        btn.textContent = 'Start Page';
+        btn.className = 'toggle-btn start';
+      }
+    }
+
+    // ================================================================
+    // LOAD CONTRIBUTIONS
+    // ================================================================
+    function loadContributions() {
+      sbRpc('admin_get_contributions', { pwd: adminPassword })
+        .then(function(result) {
+          if (result && result.success) {
+            contributions = result.data || [];
+            renderContributions();
+            updateStats();
+          }
+        });
+    }
+
+    function renderContributions() {
+      var tbody = document.getElementById('contribBody');
+      var info = document.getElementById('contribInfo');
+
+      if (contributions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="no-data">No contributions yet</td></tr>';
+        info.textContent = '0 contributions';
+        return;
+      }
+
+      info.textContent = contributions.length + ' contribution(s)';
+      var html = '';
+      contributions.forEach(function(c) {
+        var isVerified = c.status === 'Verified';
+        var statusClass = isVerified ? 'verified' : 'pending';
+        var statusLabel = isVerified ? '✅ Verified' : '⏳ Pending';
+
+        html += '<tr>'
+          + '<td><strong>' + escapeHtml(c.name) + '</strong>'
+          + '<br><span style="font-size:11px;color:#999;">' + escapeHtml(c.event_name) + '</span></td>'
+          + '<td style="font-weight:700;color:#667eea;">₹' + parseFloat(c.amount).toLocaleString('en-IN') + '</td>'
+          + '<td style="font-size:12px;color:#888;">' + escapeHtml(c.upi_ref || '—') + '</td>'
+          + '<td style="font-size:12px;">' + formatDate(c.created_at) + '</td>'
+          + '<td><span class="badge ' + statusClass + '">' + statusLabel + '</span></td>'
+          + '<td>';
+
+        if (isVerified) {
+          html += '<button class="action-btn unverify" onclick="setStatus(' + c.id + ',\'Pending Verification\')">Undo</button>';
+        } else {
+          html += '<button class="action-btn verify" onclick="setStatus(' + c.id + ',\'Verified\')">✅</button>';
+        }
+        html += '<button class="action-btn delete" onclick="deleteContrib(' + c.id + ',\'' + escapeHtml(c.name) + '\')">🗑️</button>';
+        html += '</td></tr>';
+      });
+      tbody.innerHTML = html;
+    }
+
+    function updateStats() {
+      // Filter for current event
+      var eventContribs = contributions.filter(function(c) {
+        return c.event_name === settings.event_name;
+      });
+      var total = 0;
+      eventContribs.forEach(function(c) { total += parseFloat(c.amount) || 0; });
+      var target = settings.target_amount || 1;
+      var pct = Math.min(100, Math.round((total / target) * 100));
+
+      document.getElementById('statTotal').textContent = '₹' + total.toLocaleString('en-IN');
+      document.getElementById('statCount').textContent = eventContribs.length;
+      document.getElementById('statProgress').textContent = pct + '%';
+    }
+
+    // ================================================================
+    // TOGGLE PAGE STATUS
+    // ================================================================
+    function togglePageStatus() {
+      var newStatus = !settings.is_active;
+      var btn = document.getElementById('toggleBtn');
+      btn.disabled = true;
+
+      sbRpc('update_settings', { pwd: adminPassword, p_is_active: newStatus })
+        .then(function(result) {
+          btn.disabled = false;
+          if (result && result.success) {
+            settings.is_active = newStatus;
+            updateStatusBanner();
+            showToast(newStatus ? 'Page activated!' : 'Page stopped!', 'success');
+          } else {
+            showToast('Failed: ' + (result.message || 'Unknown error'), 'error');
+          }
+        })
+        .catch(function() {
+          btn.disabled = false;
+          showToast('Connection error', 'error');
+        });
+    }
+
+    // ================================================================
+    // SAVE SETTINGS
+    // ================================================================
+    function saveEventSettings() {
+      var name = document.getElementById('setEventName').value.trim();
+      var target = parseFloat(document.getElementById('setTargetAmount').value);
+      var deadlineVal = document.getElementById('setDeadline').value;
+      if (!name) { flashMsg('eventMsg', 'Event name required', true); return; }
+
+      var params = {
+        pwd: adminPassword,
+        p_event_name: name,
+        p_target_amount: target || 0
+      };
+
+      // Send deadline as ISO string, or empty string to clear
+      if (deadlineVal) {
+        params.p_deadline = new Date(deadlineVal).toISOString();
+      } else {
+        params.p_deadline = '';
+      }
+
+      sbRpc('update_settings', params).then(function(result) {
+        if (result && result.success) {
+          settings.event_name = name;
+          settings.target_amount = target;
+          settings.deadline = deadlineVal ? new Date(deadlineVal).toISOString() : null;
+          flashMsg('eventMsg', 'Saved!');
+          updateStats();
+          populateSettingsForm();
+          document.getElementById('statTarget').textContent = '₹' + (target || 0).toLocaleString('en-IN');
+        } else {
+          flashMsg('eventMsg', 'Error: ' + (result.message || ''), true);
+        }
+      });
+    }
+
+    function clearDeadline() {
+      document.getElementById('setDeadline').value = '';
+      document.getElementById('deadlineStatus').textContent = 'Deadline will be cleared on save';
+      document.getElementById('deadlineStatus').style.color = '#888';
+    }
+
+    // ── Theme ──
+    function selectTheme(name) {
+      document.getElementById('setTheme').value = name;
+      document.querySelectorAll('.theme-option').forEach(function(el) {
+        el.classList.toggle('selected', el.getAttribute('data-theme') === name);
+      });
+    }
+
+    function saveTheme() {
+      var theme = document.getElementById('setTheme').value;
+      sbRpc('update_settings', {
+        pwd: adminPassword,
+        p_theme: theme
+      }).then(function(result) {
+        if (result && result.success) {
+          settings.theme = theme;
+          flashMsg('themeMsg', 'Theme saved!');
+        } else {
+          flashMsg('themeMsg', 'Error: ' + (result.message || ''), true);
+        }
+      });
+    }
+
+    function saveUpiSettings() {
+      sbRpc('update_settings', {
+        pwd: adminPassword,
+        p_upi_id: document.getElementById('setUpiId').value.trim(),
+        p_upi_number: document.getElementById('setUpiNumber').value.trim(),
+        p_payee_name: document.getElementById('setPayeeName').value.trim()
+      }).then(function(result) {
+        if (result && result.success) {
+          flashMsg('upiMsg', 'Saved!');
+        } else {
+          flashMsg('upiMsg', 'Error: ' + (result.message || ''), true);
+        }
+      });
+    }
+
+    function saveMessage() {
+      sbRpc('update_settings', {
+        pwd: adminPassword,
+        p_message: document.getElementById('setMessage').value
+      }).then(function(result) {
+        if (result && result.success) {
+          flashMsg('messageMsg', 'Saved!');
+        } else {
+          flashMsg('messageMsg', 'Error: ' + (result.message || ''), true);
+        }
+      });
+    }
+
+    function changePassword() {
+      var newPwd = document.getElementById('setNewPassword').value;
+      var confirm = document.getElementById('setConfirmPassword').value;
+      if (!newPwd) { flashMsg('pwdMsg', 'Enter a new password', true); return; }
+      if (newPwd !== confirm) { flashMsg('pwdMsg', 'Passwords do not match', true); return; }
+      if (newPwd.length < 4) { flashMsg('pwdMsg', 'Password too short (min 4 chars)', true); return; }
+
+      sbRpc('update_settings', {
+        pwd: adminPassword,
+        p_new_password: newPwd
+      }).then(function(result) {
+        if (result && result.success) {
+          adminPassword = newPwd;
+          flashMsg('pwdMsg', 'Password updated!');
+          document.getElementById('setNewPassword').value = '';
+          document.getElementById('setConfirmPassword').value = '';
+        } else {
+          flashMsg('pwdMsg', 'Error: ' + (result.message || ''), true);
+        }
+      });
+    }
+
+    // ================================================================
+    // CONTRIBUTION ACTIONS
+    // ================================================================
+    function setStatus(id, status) {
+      sbRpc('update_contribution_status', {
+        pwd: adminPassword,
+        contrib_id: id,
+        new_status: status
+      }).then(function(result) {
+        if (result && result.success) {
+          showToast('Status updated', 'success');
+          loadContributions();
+        } else {
+          showToast('Failed to update', 'error');
+        }
+      });
+    }
+
+    function deleteContrib(id, name) {
+      if (!confirm('Delete contribution from "' + name + '"? This cannot be undone.')) return;
+
+      sbRpc('delete_contribution', {
+        pwd: adminPassword,
+        contrib_id: id
+      }).then(function(result) {
+        if (result && result.success) {
+          showToast('Deleted', 'success');
+          loadContributions();
+        } else {
+          showToast('Failed to delete', 'error');
+        }
+      });
+    }
+
+    // ================================================================
+    // UI HELPERS
+    // ================================================================
+    function togglePanel(id) {
+      var body = document.getElementById(id);
+      var arrow = document.getElementById(id + 'Arrow');
+      body.classList.toggle('collapsed');
+      arrow.classList.toggle('collapsed');
+    }
+
+    function flashMsg(id, text, isError) {
+      var el = document.getElementById(id);
+      el.textContent = text;
+      el.className = 'save-msg visible' + (isError ? ' error' : '');
+      setTimeout(function() { el.className = 'save-msg'; }, 3000);
+    }
+
+    function showToast(msg, type) {
+      var el = document.getElementById('toast');
+      el.textContent = msg;
+      el.className = 'toast visible ' + type;
+      setTimeout(function() { el.className = 'toast'; }, 3000);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      var div = document.createElement('div');
+      div.appendChild(document.createTextNode(str));
+      return div.innerHTML;
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      var d = new Date(iso);
+      var m = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var h = d.getHours(), mn = d.getMinutes(), ap = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      return d.getDate() + ' ' + m[d.getMonth()] + ', ' + h + ':' + (mn < 10 ? '0' : '') + mn + ' ' + ap;
+    }
+  </script>
+</body>
+</html>

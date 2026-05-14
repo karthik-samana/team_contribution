@@ -13,6 +13,54 @@
       min-height: 100vh;
       padding: 16px;
       color: #333;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ── Animated Background ── */
+    .bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .bg-float {
+      position: absolute;
+      opacity: 0.08;
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      animation: floatUp linear infinite;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .bg-float.icon { font-size: 28px; opacity: 0.1; }
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.08; }
+      90%  { opacity: 0.08; }
+      100% { transform: translateY(-120px) rotate(15deg); opacity: 0; }
+    }
+    .bg-float.icon { animation-name: floatUpIcon; }
+    @keyframes floatUpIcon {
+      0%   { transform: translateY(100vh) rotate(0deg) scale(1); opacity: 0; }
+      10%  { opacity: 0.1; }
+      90%  { opacity: 0.1; }
+      100% { transform: translateY(-120px) rotate(20deg) scale(1.1); opacity: 0; }
+    }
+    /* Subtle grid pattern overlay */
+    .bg-grid {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
     }
 
     /* ── Card Container ── */
@@ -35,6 +83,38 @@
     .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
     .header p { font-size: 14px; opacity: 0.9; }
     .event-icon { font-size: 40px; margin-bottom: 8px; }
+
+    /* ── Message Section ── */
+    .message-section {
+      padding: 16px 24px 4px;
+    }
+    .message-toggle {
+      background: none;
+      border: none;
+      color: #667eea;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin: 0 auto;
+    }
+    .message-toggle:hover { text-decoration: underline; }
+    .message-content {
+      margin-top: 12px;
+      padding: 16px;
+      background: linear-gradient(135deg, #f8f0ff 0%, #eef2ff 100%);
+      border-radius: 12px;
+      border-left: 4px solid #764ba2;
+      font-size: 13.5px;
+      line-height: 1.7;
+      color: #444;
+      display: none;
+    }
+    .message-content.visible { display: block; }
+    .message-content p { margin-bottom: 10px; }
+    .message-content p:last-child { margin-bottom: 0; }
 
     /* ── Progress Section ── */
     .progress-section {
@@ -66,6 +146,96 @@
       font-size: 13px;
       color: #888;
       margin-top: 4px;
+    }
+
+    /* ── Countdown Timer ── */
+    .countdown-section {
+      padding: 12px 24px 4px;
+      text-align: center;
+      display: none;
+    }
+    .countdown-section.visible { display: block; }
+    .countdown-label {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .countdown-boxes {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+    .countdown-box {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border-radius: 10px;
+      padding: 8px 4px;
+      min-width: 58px;
+      text-align: center;
+    }
+    .countdown-box .num {
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+    .countdown-box .unit {
+      font-size: 10px;
+      opacity: 0.85;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .countdown-expired {
+      color: #dc3545;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 8px;
+    }
+
+    /* ── UPI App Chooser ── */
+    .upi-app-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .upi-app-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 8px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .upi-app-btn:hover {
+      border-color: #667eea;
+      background: #f0f0ff;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(102,126,234,0.2);
+    }
+    .upi-app-btn .app-icon { font-size: 20px; }
+    .upi-app-btn.gpay { border-color: #4285F4; }
+    .upi-app-btn.gpay:hover { background: #e8f0fe; }
+    .upi-app-btn.phonepe { border-color: #5f259f; }
+    .upi-app-btn.phonepe:hover { background: #f3ecfc; }
+    .upi-app-btn.paytm { border-color: #00baf2; }
+    .upi-app-btn.paytm:hover { background: #e5f7fd; }
+    .upi-app-btn.generic { border-color: #28a745; }
+    .upi-app-btn.generic:hover { background: #e8f5e9; }
+    .upi-or-divider {
+      text-align: center;
+      font-size: 12px;
+      color: #aaa;
+      margin: 8px 0;
     }
 
     /* ── Form ── */
@@ -325,10 +495,73 @@
       padding: 8px;
       border-radius: 6px;
     }
+
+    /* ── Inactive Page Overlay ── */
+    .inactive-overlay {
+      display: none;
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .inactive-overlay.visible { display: block; }
+    .inactive-overlay .icon { font-size: 48px; margin-bottom: 12px; }
+    .inactive-overlay h2 { font-size: 20px; color: #333; margin-bottom: 8px; }
+    .inactive-overlay p { font-size: 14px; color: #888; }
+
+    /* ── Loading State ── */
+    .page-loading {
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .page-loading .loader {
+      width: 40px; height: 40px;
+      border: 4px solid #e9ecef;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    .page-content { display: none; }
+    .page-content.visible { display: block; }
+
+    /* ── Theme: Amadeus Aviation ── */
+    body.theme-amadeus {
+      background: linear-gradient(135deg, #0a1628 0%, #1a237e 40%, #0d47a1 70%, #01579b 100%);
+    }
+    body.theme-amadeus .header {
+      background: linear-gradient(135deg, #0d47a1 0%, #1565c0 50%, #1976d2 100%);
+    }
+    body.theme-amadeus .progress-bar-fill {
+      background: linear-gradient(90deg, #0d47a1, #42a5f5);
+    }
+    body.theme-amadeus .step.active { color: #42a5f5; }
+    body.theme-amadeus .step.active .step-num { background: #0d47a1; }
+    body.theme-amadeus .form-group input:focus { border-color: #1976d2; }
+    body.theme-amadeus .pay-btn {
+      background: linear-gradient(135deg, #0d47a1 0%, #1976d2 100%);
+    }
+    body.theme-amadeus .quick-amt-btn:hover,
+    body.theme-amadeus .quick-amt-btn.active {
+      border-color: #1976d2; color: #1976d2; background: #e3f2fd;
+    }
+    body.theme-amadeus .contributor-item .amount { color: #1565c0; }
+    body.theme-amadeus .contributor-count { background: #0d47a1; }
+    body.theme-amadeus .countdown-box {
+      background: linear-gradient(135deg, #0d47a1 0%, #1565c0 100%);
+    }
+    body.theme-amadeus .upi-app-btn:hover {
+      box-shadow: 0 2px 8px rgba(13,71,161,0.25);
+    }
+    body.theme-amadeus .card {
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
   </style>
 </head>
 <body>
-  <div class="card">
+  <!-- Animated Background -->
+  <div class="bg-grid"></div>
+  <div class="bg-canvas" id="bgCanvas"></div>
+
+  <div class="card" style="position:relative; z-index:1;">
     <!-- Config Error (shown if Supabase not configured) -->
     <div class="config-error" id="configError">
       <strong>⚠️ Setup Required</strong>
@@ -336,11 +569,35 @@
       <code>See README.md for instructions</code>
     </div>
 
+    <!-- Loading State -->
+    <div class="page-loading" id="pageLoading">
+      <div class="loader"></div>
+      <p style="color:#888; font-size:14px;">Loading...</p>
+    </div>
+
+    <!-- Inactive Overlay -->
+    <div class="inactive-overlay" id="inactiveOverlay">
+      <div class="icon">🔒</div>
+      <h2>Contributions Closed</h2>
+      <p>This collection is currently paused. Check back later!</p>
+    </div>
+
+    <!-- Main Content (hidden until settings loaded) -->
+    <div class="page-content" id="pageContent">
+
     <!-- Header -->
     <div class="header">
       <div class="event-icon">🎉</div>
       <h1 id="eventTitle">Loading...</h1>
       <p>Contribute & make it special!</p>
+    </div>
+
+    <!-- Message -->
+    <div class="message-section" id="messageSection" style="display:none;">
+      <button class="message-toggle" onclick="toggleMessage()">
+        💌 Read our message for them <span id="msgArrow">▼</span>
+      </button>
+      <div class="message-content" id="messageContent"></div>
     </div>
 
     <!-- Progress -->
@@ -353,6 +610,17 @@
         <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
       </div>
       <div class="progress-percent" id="progressPercent">0% collected</div>
+    </div>
+
+    <!-- Countdown Timer -->
+    <div class="countdown-section" id="countdownSection">
+      <div class="countdown-label">⏰ Time Remaining</div>
+      <div class="countdown-boxes" id="countdownBoxes">
+        <div class="countdown-box"><div class="num" id="cdDays">0</div><div class="unit">Days</div></div>
+        <div class="countdown-box"><div class="num" id="cdHours">0</div><div class="unit">Hours</div></div>
+        <div class="countdown-box"><div class="num" id="cdMins">0</div><div class="unit">Mins</div></div>
+        <div class="countdown-box"><div class="num" id="cdSecs">0</div><div class="unit">Secs</div></div>
+      </div>
     </div>
 
     <!-- Steps -->
@@ -396,17 +664,29 @@
 
     <!-- Step 2: QR + Payment -->
     <div class="qr-section" id="qrSection">
-      <p>Scan the QR code or tap the button below to pay via UPI</p>
+      <p>Scan the QR code below, or choose your UPI app to pay</p>
       <div id="qrcode"></div>
-      <br/>
-      <a id="upiLink" href="#" style="display:none;">
-        <button class="pay-btn" style="margin:8px 0;">
-          Open UPI App & Pay
-        </button>
-      </a>
-      <p id="upiIdDisplay" style="margin-top:12px; font-size:13px; color:#555;"></p>
-      <br/>
-      <button class="pay-btn" onclick="showConfirm()" style="background:#28a745; margin-top:8px;">
+
+      <div class="upi-or-divider">── or pay via app ──</div>
+
+      <div class="upi-app-grid" id="upiAppGrid">
+        <a class="upi-app-btn gpay" id="btnGpay" href="#">
+          <span class="app-icon">💰</span> Google Pay
+        </a>
+        <a class="upi-app-btn phonepe" id="btnPhonepe" href="#">
+          <span class="app-icon">📱</span> PhonePe
+        </a>
+        <a class="upi-app-btn paytm" id="btnPaytm" href="#">
+          <span class="app-icon">💳</span> Paytm
+        </a>
+        <a class="upi-app-btn generic" id="btnGenericUpi" href="#">
+          <span class="app-icon">🏦</span> Other UPI
+        </a>
+      </div>
+
+      <p id="upiIdDisplay" style="margin-top:8px; font-size:13px; color:#555;"></p>
+
+      <button class="pay-btn" onclick="showConfirm()" style="background:#28a745; margin-top:12px;">
         ✅ I've Completed the Payment
       </button>
       <br/>
@@ -442,6 +722,8 @@
     </div>
 
     <div class="footer">Team Contribution App</div>
+
+    </div><!-- end .page-content -->
   </div>
 
   <!-- QR Code Library -->
@@ -449,25 +731,19 @@
 
   <script>
     // ================================================================
-    // CONFIGURATION — Update these values for your setup
+    // CONFIGURATION — Only Supabase credentials needed here.
+    // Event settings are managed from the Admin page.
     // ================================================================
-    var CONFIG = {
-      // Event settings
-      EVENT_NAME: "Farewell for [Name]",       // Change per event
-      TARGET_AMOUNT: 5000,                      // Target in ₹
+    var SUPABASE_URL = "https://tyhiubwwiqxzwlbptvha.supabase.co";
+    var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5aGl1Ynd3aXF4endsYnB0dmhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NDY5MDIsImV4cCI6MjA5NDMyMjkwMn0.11oJgFsdGBpjTWlSCyLxP30C9hUgCo7fBTu0dg7MFrY";
 
-      // UPI settings
-      UPI_ID: "skar1234@ybl",                   // Your UPI ID
-      UPI_NUMBER: "9347134395",                  // Your UPI number (shown for reference)
-      PAYEE_NAME: "Team Contribution",           // Display name in UPI apps
-
-      // Supabase settings (from your Supabase project dashboard → Settings → API)
-      SUPABASE_URL: "https://YOUR_PROJECT_ID.supabase.co",     // ← Replace
-      SUPABASE_ANON_KEY: "YOUR_ANON_KEY_HERE"                  // ← Replace
-    };
+    // Settings loaded from Supabase (populated on init)
+    var CONFIG = {};
+    var countdownInterval = null;
+    var deadlineDate = null;
 
     // ================================================================
-    // APP CODE — No changes needed below
+    // APP CODE
     // ================================================================
 
     var currentStep = 1;
@@ -475,26 +751,87 @@
     // ── Supabase REST helpers ──
     function supabaseHeaders() {
       return {
-        'apikey': CONFIG.SUPABASE_ANON_KEY,
-        'Authorization': 'Bearer ' + CONFIG.SUPABASE_ANON_KEY,
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
         'Content-Type': 'application/json',
         'Prefer': 'return=representation'
       };
     }
 
     function supabaseUrl(table, query) {
-      return CONFIG.SUPABASE_URL + '/rest/v1/' + table + (query || '');
+      return SUPABASE_URL + '/rest/v1/' + table + (query || '');
     }
 
-    // ── Init ──
+    // ── Init: Load settings from Supabase, then render page ──
     window.addEventListener('DOMContentLoaded', function() {
-      if (CONFIG.SUPABASE_URL.indexOf('YOUR_PROJECT_ID') !== -1) {
+      fetch(supabaseUrl('public_settings', '?id=eq.1'), {
+        method: 'GET',
+        headers: supabaseHeaders()
+      })
+      .then(function(res) { return res.json(); })
+      .then(function(data) {
+        document.getElementById('pageLoading').style.display = 'none';
+
+        if (!data || data.length === 0) {
+          document.getElementById('configError').className = 'config-error visible';
+          return;
+        }
+
+        var s = data[0];
+        CONFIG = {
+          EVENT_NAME: s.event_name,
+          TARGET_AMOUNT: s.target_amount || 0,
+          UPI_ID: s.upi_id,
+          UPI_NUMBER: s.upi_number || '',
+          PAYEE_NAME: s.payee_name || 'Team Contribution'
+        };
+
+        // Check if page is active
+        if (!s.is_active) {
+          document.getElementById('inactiveOverlay').className = 'inactive-overlay visible';
+          return;
+        }
+
+        // Show main content
+        document.getElementById('pageContent').className = 'page-content visible';
+        document.getElementById('eventTitle').textContent = CONFIG.EVENT_NAME;
+        document.getElementById('targetAmount').textContent = '₹' + CONFIG.TARGET_AMOUNT.toLocaleString('en-IN');
+        document.getElementById('upiIdDisplay').textContent = 'UPI ID: ' + CONFIG.UPI_ID + '  |  UPI No: ' + CONFIG.UPI_NUMBER;
+
+        // Start countdown if deadline is set
+        if (s.deadline) {
+          deadlineDate = new Date(s.deadline);
+          if (deadlineDate > new Date()) {
+            document.getElementById('countdownSection').className = 'countdown-section visible';
+            updateCountdown();
+            countdownInterval = setInterval(updateCountdown, 1000);
+          } else {
+            // Deadline has passed
+            document.getElementById('inactiveOverlay').querySelector('h2').textContent = 'Collection Deadline Passed';
+            document.getElementById('inactiveOverlay').querySelector('p').textContent = 'The contribution period has ended. Thank you!';
+            document.getElementById('inactiveOverlay').className = 'inactive-overlay visible';
+            document.getElementById('pageContent').className = 'page-content';
+            return;
+          }
+        }
+
+        // Render message if present
+        if (s.message && s.message.trim()) {
+          var paragraphs = s.message.split(/\n\n+/);
+          var msgHtml = '';
+          paragraphs.forEach(function(p) {
+            if (p.trim()) msgHtml += '<p>' + escapeHtml(p.trim()) + '</p>';
+          });
+          document.getElementById('messageContent').innerHTML = msgHtml;
+          document.getElementById('messageSection').style.display = 'block';
+        }
+
+        loadContributions();
+      })
+      .catch(function() {
+        document.getElementById('pageLoading').style.display = 'none';
         document.getElementById('configError').className = 'config-error visible';
-      }
-      document.getElementById('eventTitle').textContent = CONFIG.EVENT_NAME;
-      document.getElementById('targetAmount').textContent = '₹' + CONFIG.TARGET_AMOUNT.toLocaleString('en-IN');
-      document.getElementById('upiIdDisplay').textContent = 'UPI ID: ' + CONFIG.UPI_ID + '  |  UPI No: ' + CONFIG.UPI_NUMBER;
-      loadContributions();
+      });
     });
 
     // ── Quick Amount Buttons ──
@@ -530,14 +867,16 @@
 
       hideStatus();
 
-      // Build UPI URI
-      var upiUri = 'upi://pay?pa=' + encodeURIComponent(CONFIG.UPI_ID)
+      // Build UPI params
+      var upiParams = 'pa=' + encodeURIComponent(CONFIG.UPI_ID)
         + '&pn=' + encodeURIComponent(CONFIG.PAYEE_NAME)
         + '&am=' + amount.toFixed(2)
         + '&cu=INR'
         + '&tn=' + encodeURIComponent(CONFIG.EVENT_NAME + ' - ' + name);
 
-      // Generate QR Code
+      var upiUri = 'upi://pay?' + upiParams;
+
+      // Generate QR Code (always uses generic upi:// scheme)
       var qrDiv = document.getElementById('qrcode');
       qrDiv.innerHTML = '';
       var qr = qrcode(0, 'M');
@@ -545,16 +884,55 @@
       qr.make();
       qrDiv.innerHTML = qr.createImgTag(5, 8);
 
-      // UPI deep link (mobile)
-      var upiLinkEl = document.getElementById('upiLink');
-      upiLinkEl.href = upiUri;
-      upiLinkEl.style.display = 'inline-block';
+      // Set app-specific deep links (Android intents for reliable app targeting)
+      document.getElementById('btnGpay').href = 'intent://pay?' + upiParams
+        + '#Intent;scheme=upi;package=com.google.android.apps.nbu.paisa.user;end';
+      document.getElementById('btnPhonepe').href = 'intent://pay?' + upiParams
+        + '#Intent;scheme=upi;package=com.phonepe.app;end';
+      document.getElementById('btnPaytm').href = 'intent://pay?' + upiParams
+        + '#Intent;scheme=upi;package=net.one97.paytm;end';
+      document.getElementById('btnGenericUpi').href = upiUri;
 
       setStep(2);
     }
 
     function showConfirm() { setStep(3); }
     function goBack() { hideStatus(); setStep(1); }
+
+    // ── Countdown Timer ──
+    function updateCountdown() {
+      if (!deadlineDate) return;
+      var now = new Date();
+      var diff = deadlineDate - now;
+
+      if (diff <= 0) {
+        clearInterval(countdownInterval);
+        document.getElementById('countdownBoxes').innerHTML =
+          '<div class="countdown-expired">⏰ Time\'s up! Collection period has ended.</div>';
+        // Disable form
+        document.getElementById('payBtn').disabled = true;
+        document.getElementById('payBtn').textContent = 'Deadline Passed';
+        return;
+      }
+
+      var days = Math.floor(diff / 86400000);
+      var hours = Math.floor((diff % 86400000) / 3600000);
+      var mins = Math.floor((diff % 3600000) / 60000);
+      var secs = Math.floor((diff % 60000) / 1000);
+
+      document.getElementById('cdDays').textContent = days;
+      document.getElementById('cdHours').textContent = hours;
+      document.getElementById('cdMins').textContent = mins;
+      document.getElementById('cdSecs').textContent = secs;
+    }
+
+    // ── Toggle Message ──
+    function toggleMessage() {
+      var el = document.getElementById('messageContent');
+      var arrow = document.getElementById('msgArrow');
+      var visible = el.classList.toggle('visible');
+      arrow.textContent = visible ? '▲' : '▼';
+    }
 
     // ── Submit Payment Confirmation to Supabase ──
     function submitPayment() {
@@ -669,6 +1047,61 @@
       var h = d.getHours(), mn = d.getMinutes(), ap = h >= 12 ? 'PM' : 'AM';
       h = h % 12 || 12;
       return d.getDate() + ' ' + m[d.getMonth()] + ' ' + d.getFullYear() + ', ' + h + ':' + (mn < 10 ? '0' : '') + mn + ' ' + ap;
+    }
+
+    // ================================================================
+    // THEME SYSTEM
+    // ================================================================
+    var THEMES = {
+      'default': {
+        className: '',
+        items: ['✨', '⭐', '🎉', '🎊', '❤️', '💜', '🌟', '🎈'],
+      },
+      'amadeus': {
+        className: 'theme-amadeus',
+        items: [
+          '✈️', '✈️', '✈️',
+          '🌍', '🌏', '📍',
+          'HOT', 'RET', 'ITR',
+          'PNR', 'GDS', '1A',
+          'ARNK', 'SSR', 'TST',
+          '📄 HOT FILE', '📄 RET FILE',
+          '📊 REPORT', '📃 ITR',
+          '✈ ITINERARY', '🎫 TICKET',
+          '🛩️', '🚀', '🌐',
+          'AMADEUS', 'DOC TEAM',
+          'FXP', 'FXD', 'FXA',
+          'RT', 'IG', 'TTP'
+        ],
+      }
+    };
+
+    function applyTheme(themeName) {
+      var theme = THEMES[themeName] || THEMES['default'];
+
+      // Apply CSS class
+      if (theme.className) {
+        document.body.classList.add(theme.className);
+      }
+
+      // Spawn floating background elements
+      var canvas = document.getElementById('bgCanvas');
+      canvas.innerHTML = '';
+      var items = theme.items;
+      var count = 25; // number of floating elements
+
+      for (var i = 0; i < count; i++) {
+        var el = document.createElement('div');
+        var item = items[Math.floor(Math.random() * items.length)];
+        var isIcon = item.length <= 3 && !/[A-Z]/.test(item); // emoji vs text
+        el.className = 'bg-float' + (isIcon ? ' icon' : '');
+        el.textContent = item;
+        el.style.left = (Math.random() * 95) + '%';
+        el.style.animationDuration = (15 + Math.random() * 25) + 's';
+        el.style.animationDelay = (Math.random() * 20) + 's';
+        el.style.fontSize = isIcon ? (22 + Math.random() * 18) + 'px' : (12 + Math.random() * 8) + 'px';
+        canvas.appendChild(el);
+      }
     }
   </script>
 </body>

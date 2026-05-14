@@ -26,3 +26,5 @@ CREATE POLICY "Anyone can view contributions"
 
 -- 5. No UPDATE or DELETE allowed from client side
 -- (You can still edit rows directly in the Supabase dashboard)
+-- 
+-- NEXT: Run admin-setup.sql to enable the admin dashboard
