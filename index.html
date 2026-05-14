@@ -351,7 +351,7 @@
     <div class="page-content" id="pageContent">
 
     <div class="header">
-      <div class="event-icon" id="eventIcon"></div>
+      <div class="event-icon" id="eventIcon" style="font-size:12px;font-weight:700;letter-spacing:2px;opacity:0.7;text-transform:uppercase;">DOC TEAM</div>
       <h1 id="eventTitle">Loading...</h1>
       <p>Contribute & make it special</p>
     </div>
@@ -396,7 +396,7 @@
       <div class="form-group">
         <label for="amountInput">Amount</label>
         <div class="amount-input-wrap">
-          <input type="number" id="amountInput" placeholder="500" min="1" max="100000" />
+          <input type="number" id="amountInput" placeholder="Enter amount" min="1" max="100000" />
         </div>
         <div class="quick-amounts">
           <button class="quick-amt-btn" onclick="setAmount(200)">200</button>
@@ -412,11 +412,21 @@
       <p>Scan the QR code with any UPI app to pay</p>
       <div id="qrcode"></div>
 
-      <div class="upi-or-divider">or copy UPI ID and pay manually</div>
+      <div class="upi-or-divider">or copy UPI ID / phone number and pay manually</div>
 
       <div class="copy-upi-section">
-        <span class="copy-upi-id" id="copyUpiId"></span>
+        <div style="flex:1;">
+          <div style="font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;margin-bottom:4px;">UPI ID</div>
+          <span class="copy-upi-id" id="copyUpiId"></span>
+        </div>
         <button class="copy-btn" id="copyUpiBtn" onclick="copyUpiId()">Copy</button>
+      </div>
+      <div class="copy-upi-section" id="copyPhoneSection" style="display:none;">
+        <div style="flex:1;">
+          <div style="font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:0.8px;font-weight:600;margin-bottom:4px;">Phone Number</div>
+          <span class="copy-upi-id" id="copyPhoneNum"></span>
+        </div>
+        <button class="copy-btn" id="copyPhoneBtn" onclick="copyPhone()">Copy</button>
       </div>
 
       <button class="done-btn" onclick="showConfirm()">I've Completed the Payment</button>
@@ -520,8 +530,11 @@
           document.getElementById('messageContent').innerHTML = msgHtml;
           document.getElementById('messageSection').style.display = 'block';
         }
-        var iconEl = document.getElementById('eventIcon');
-        iconEl.appendChild(makePlaneSVG(44, 'rgba(255,255,255,0.85)'));
+        // Show phone number if available
+        if (CONFIG.UPI_NUMBER) {
+          document.getElementById('copyPhoneNum').textContent = CONFIG.UPI_NUMBER;
+          document.getElementById('copyPhoneSection').style.display = 'flex';
+        }
         applyTheme();
         loadContributions();
       })
@@ -530,6 +543,25 @@
         document.getElementById('configError').className = 'config-error visible';
       });
     });
+
+    function copyPhone() {
+      var phone = CONFIG.UPI_NUMBER;
+      var btn = document.getElementById('copyPhoneBtn');
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(phone).then(function() {
+          btn.textContent = 'Copied';
+          btn.className = 'copy-btn copied';
+          setTimeout(function() { btn.textContent = 'Copy'; btn.className = 'copy-btn'; }, 2000);
+        });
+      } else {
+        var ta = document.createElement('textarea');
+        ta.value = phone; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+        btn.textContent = 'Copied';
+        btn.className = 'copy-btn copied';
+        setTimeout(function() { btn.textContent = 'Copy'; btn.className = 'copy-btn'; }, 2000);
+      }
+    }
 
     function copyUpiId() {
       var upiId = CONFIG.UPI_ID;
