@@ -438,19 +438,17 @@
     </div>
 
     <div class="qr-section" id="qrSection">
-      <p>Scan the QR code with any UPI app to pay</p>
+      <p id="qrInstruction">Scan the QR code with any UPI app to pay</p>
       <div id="qrcode"></div>
 
-      <div id="iosHint" style="display:none;margin:14px 0 4px;padding:12px 16px;background:rgba(30,100,220,0.08);border-radius:12px;border:1px solid rgba(100,180,255,0.1);">
-        <div style="font-size:13px;color:#93c5fd;font-weight:600;margin-bottom:4px;">On iPhone?</div>
-        <div style="font-size:12px;color:#9ca3af;line-height:1.5;">Scan the QR code above, or try opening your UPI app directly below. If it doesn't open, copy the UPI ID and pay manually.</div>
-      </div>
-
-      <div class="upi-apps-label" id="iosAppsLabel" style="display:none;">Try opening your UPI app</div>
-      <div class="upi-apps-grid" id="iosAppsGrid" style="display:none;">
-        <a class="upi-app-btn" id="btnIosGpay" href="#"><span class="app-icon">G</span><span class="app-name">Google Pay</span></a>
-        <a class="upi-app-btn" id="btnIosPhonepe" href="#"><span class="app-icon">P</span><span class="app-name">PhonePe</span></a>
-        <a class="upi-app-btn" id="btnIosPaytm" href="#"><span class="app-icon">P</span><span class="app-name">Paytm</span></a>
+      <div id="iosHint" style="display:none;margin:14px 0 4px;padding:14px 16px;background:rgba(30,100,220,0.08);border-radius:12px;border:1px solid rgba(100,180,255,0.1);">
+        <div style="font-size:13px;color:#93c5fd;font-weight:600;margin-bottom:6px;">On iPhone? Follow these steps:</div>
+        <div style="font-size:12px;color:#9ca3af;line-height:1.7;">
+          1. Open your UPI app (GPay / PhonePe / Paytm)<br/>
+          2. Look for <strong style="color:#e8e8e8;">Scan QR</strong> option inside the app<br/>
+          3. Scan the QR code shown above<br/>
+          <span style="color:#6b7280;">Or copy the UPI ID below and pay manually</span>
+        </div>
       </div>
 
       <button class="done-btn" id="btnUpiPay" onclick="openUpiApp()" style="display:block;width:100%;margin-top:14px;">Open UPI App to Pay</button>
@@ -688,23 +686,12 @@
 
       if (isIOS) {
         // iOS: hide generic upi:// button (WhatsApp intercepts it)
-        // Show app-specific buttons using custom URL schemes instead
+        // Show step-by-step instructions to scan QR from inside UPI app
         document.getElementById('btnUpiPay').style.display = 'none';
         document.getElementById('appsLabel').style.display = 'none';
         document.getElementById('appsGrid').style.display = 'none';
         document.getElementById('iosHint').style.display = 'block';
-        document.getElementById('iosAppsLabel').style.display = '';
-        document.getElementById('iosAppsGrid').style.display = '';
-
-        // iOS custom URL schemes (bypass WhatsApp's upi:// hijack)
-        var iosParams = 'pa=' + encodeURIComponent(CONFIG.UPI_ID)
-          + '&pn=' + encodeURIComponent(CONFIG.PAYEE_NAME)
-          + '&am=' + amStr + '&cu=INR'
-          + '&tn=' + encodeURIComponent(CONFIG.EVENT_NAME + ' - ' + name)
-          + '&tr=' + txnId;
-        document.getElementById('btnIosGpay').href = 'googlevpay://pay?' + iosParams;
-        document.getElementById('btnIosPhonepe').href = 'phonepe://pay?' + iosParams;
-        document.getElementById('btnIosPaytm').href = 'paytmmp://pay?' + iosParams;
+        document.getElementById('qrInstruction').textContent = 'Open your UPI app and scan this QR code from inside the app (not camera)';
       } else {
         document.getElementById('btnUpiPay').style.display = '';
         document.getElementById('iosHint').style.display = 'none';
