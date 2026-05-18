@@ -515,6 +515,7 @@
     var currentStep = 1;
     var currentUpiUri = '';
     var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
     function supabaseHeaders() {
       return {
@@ -684,14 +685,17 @@
 
       currentUpiUri = upiUri;
 
-      if (isIOS) {
-        // iOS: hide generic upi:// button (WhatsApp intercepts it)
-        // Show step-by-step instructions to scan QR from inside UPI app
+      if (isIOS || !isMobile) {
+        // iOS or Desktop: hide app buttons (only work on Android)
         document.getElementById('btnUpiPay').style.display = 'none';
         document.getElementById('appsLabel').style.display = 'none';
         document.getElementById('appsGrid').style.display = 'none';
-        document.getElementById('iosHint').style.display = 'block';
-        document.getElementById('qrInstruction').textContent = 'Open your UPI app and scan this QR code from inside the app (not camera)';
+        if (isIOS) {
+          document.getElementById('iosHint').style.display = 'block';
+          document.getElementById('qrInstruction').textContent = 'Open your UPI app and scan this QR code from inside the app (not camera)';
+        } else {
+          document.getElementById('qrInstruction').textContent = 'Scan this QR code with any UPI app on your phone to pay';
+        }
       } else {
         document.getElementById('btnUpiPay').style.display = '';
         document.getElementById('iosHint').style.display = 'none';
