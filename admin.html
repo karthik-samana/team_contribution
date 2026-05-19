@@ -970,8 +970,8 @@
       if (!supabaseClient || !otpEmail) return;
 
       var code = document.getElementById('otpCode').value.trim();
-      if (!code || code.length !== 6) {
-        flashMsg('otpCodeMsg', 'Enter the 6-digit code', true);
+      if (!code || code.length < 6) {
+        flashMsg('otpCodeMsg', 'Enter the OTP code from your email', true);
         return;
       }
 
