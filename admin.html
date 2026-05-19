@@ -411,27 +411,73 @@
         </div>
       </div>
 
-      <!-- UPI Settings -->
+      <!-- UPI Settings (OTP Protected) -->
       <div class="panel">
         <div class="panel-header" onclick="togglePanel('upiPanel')">
-          <span>💳 UPI Settings</span>
+          <span>💳 UPI Settings <span style="font-size:11px;color:#f59e0b;font-weight:400;">🔒 OTP Protected</span></span>
           <span class="arrow" id="upiPanelArrow">▼</span>
         </div>
         <div class="panel-body" id="upiPanel">
-          <div class="form-row">
-            <label>UPI ID</label>
-            <input type="text" id="setUpiId" maxlength="100" />
+          <!-- Current UPI (read-only) -->
+          <div id="upiReadOnly">
+            <div style="padding:14px;background:#f8f9fa;border-radius:10px;margin-bottom:14px;">
+              <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Current UPI ID</div>
+              <div style="font-size:16px;font-weight:700;color:#333;margin-top:4px;" id="upiDisplayId">—</div>
+              <div style="margin-top:8px;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Phone Number</div>
+              <div style="font-size:14px;font-weight:600;color:#555;margin-top:4px;" id="upiDisplayPhone">—</div>
+              <div style="margin-top:8px;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Payee Name</div>
+              <div style="font-size:14px;font-weight:600;color:#555;margin-top:4px;" id="upiDisplayPayee">—</div>
+            </div>
+            <div style="padding:12px;background:#fff3cd;border:1px solid #ffc107;border-radius:8px;margin-bottom:14px;font-size:12px;color:#856404;">
+              🔒 UPI settings require <strong>@amadeus.com</strong> email OTP verification to edit. This prevents unauthorized changes to payment details.
+            </div>
+            <button class="save-btn" onclick="showOtpFlow()" style="background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">🔓 Unlock UPI Settings</button>
           </div>
-          <div class="form-row">
-            <label>UPI Number</label>
-            <input type="text" id="setUpiNumber" maxlength="20" />
+
+          <!-- OTP Verification Flow -->
+          <div id="upiOtpFlow" style="display:none;">
+            <div style="padding:12px;background:#e8f4fd;border:1px solid #90caf9;border-radius:8px;margin-bottom:14px;font-size:12px;color:#1565c0;">
+              Enter your <strong>@amadeus.com</strong> email to receive a verification code.
+            </div>
+            <div class="form-row">
+              <label>Amadeus Email</label>
+              <div style="display:flex;gap:8px;">
+                <input type="email" id="otpEmail" placeholder="your.name@amadeus.com" style="flex:1;" />
+                <button class="save-btn" id="sendOtpBtn" onclick="sendOtp()" style="white-space:nowrap;padding:10px 16px;">Send OTP</button>
+              </div>
+              <span class="save-msg" id="otpEmailMsg"></span>
+            </div>
+            <div class="form-row" id="otpCodeRow" style="display:none;">
+              <label>Enter 6-digit OTP from your email</label>
+              <div style="display:flex;gap:8px;">
+                <input type="text" id="otpCode" placeholder="123456" maxlength="6" style="flex:1;text-align:center;font-size:20px;letter-spacing:8px;font-weight:700;" />
+                <button class="save-btn" id="verifyOtpBtn" onclick="verifyOtp()" style="white-space:nowrap;padding:10px 16px;background:linear-gradient(135deg, #28a745 0%, #20c997 100%);">Verify</button>
+              </div>
+              <span class="save-msg" id="otpCodeMsg"></span>
+            </div>
+            <button class="back-link" onclick="hideOtpFlow()" style="margin-top:8px;font-size:12px;">← Cancel</button>
           </div>
-          <div class="form-row">
-            <label>Payee Name (shown in UPI apps)</label>
-            <input type="text" id="setPayeeName" maxlength="100" />
+
+          <!-- Editable UPI Fields (shown after OTP verification) -->
+          <div id="upiEditFields" style="display:none;">
+            <div style="padding:12px;background:#d4edda;border:1px solid #c3e6cb;border-radius:8px;margin-bottom:14px;font-size:12px;color:#155724;">
+              ✅ Email verified! You can now edit UPI settings.
+            </div>
+            <div class="form-row">
+              <label>UPI ID</label>
+              <input type="text" id="setUpiId" maxlength="100" />
+            </div>
+            <div class="form-row">
+              <label>UPI Number</label>
+              <input type="text" id="setUpiNumber" maxlength="20" />
+            </div>
+            <div class="form-row">
+              <label>Payee Name (shown in UPI apps)</label>
+              <input type="text" id="setPayeeName" maxlength="100" />
+            </div>
+            <button class="save-btn" onclick="saveUpiSettings()">Save UPI Settings</button>
+            <span class="save-msg" id="upiMsg"></span>
           </div>
-          <button class="save-btn" onclick="saveUpiSettings()">Save UPI Settings</button>
-          <span class="save-msg" id="upiMsg"></span>
         </div>
       </div>
 
@@ -507,6 +553,7 @@
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
     // ================================================================
     // CONFIGURATION — Same Supabase credentials as index.html
@@ -520,6 +567,13 @@
     var adminPassword = '';
     var settings = {};
     var contributions = [];
+    var otpEmail = '';
+    var supabaseClient = null;
+
+    // Initialize Supabase client for Auth (OTP)
+    if (typeof supabase !== 'undefined' && supabase.createClient) {
+      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
 
     // ================================================================
     // SUPABASE HELPERS
@@ -612,6 +666,9 @@
       document.getElementById('setUpiId').value = settings.upi_id || '';
       document.getElementById('setUpiNumber').value = settings.upi_number || '';
       document.getElementById('setPayeeName').value = settings.payee_name || '';
+      document.getElementById('upiDisplayId').textContent = settings.upi_id || '—';
+      document.getElementById('upiDisplayPhone').textContent = settings.upi_number || '—';
+      document.getElementById('upiDisplayPayee').textContent = settings.payee_name || '—';
       document.getElementById('setMessage').value = settings.message || '';
       document.getElementById('statTarget').textContent = '₹' + (settings.target_amount || 0).toLocaleString('en-IN');
 
@@ -818,17 +875,130 @@
     }
 
     function saveUpiSettings() {
-      sbRpc('update_settings', {
-        pwd: adminPassword,
-        p_upi_id: document.getElementById('setUpiId').value.trim(),
-        p_upi_number: document.getElementById('setUpiNumber').value.trim(),
-        p_payee_name: document.getElementById('setPayeeName').value.trim()
-      }).then(function(result) {
+      if (!supabaseClient) {
+        flashMsg('upiMsg', 'Supabase client not loaded. Refresh the page.', true);
+        return;
+      }
+
+      var upiId = document.getElementById('setUpiId').value.trim();
+      var upiNum = document.getElementById('setUpiNumber').value.trim();
+      var payee = document.getElementById('setPayeeName').value.trim();
+
+      if (!upiId) { flashMsg('upiMsg', 'UPI ID is required', true); return; }
+
+      supabaseClient.rpc('update_upi_secure', {
+        p_upi_id: upiId,
+        p_upi_number: upiNum,
+        p_payee_name: payee
+      }).then(function(response) {
+        var result = response.data;
         if (result && result.success) {
-          flashMsg('upiMsg', 'Saved!');
+          settings.upi_id = upiId;
+          settings.upi_number = upiNum;
+          settings.payee_name = payee;
+          document.getElementById('upiDisplayId').textContent = upiId;
+          document.getElementById('upiDisplayPhone').textContent = upiNum || '—';
+          document.getElementById('upiDisplayPayee').textContent = payee || '—';
+          flashMsg('upiMsg', 'UPI settings saved securely!');
+          showToast('UPI settings updated', 'success');
         } else {
-          flashMsg('upiMsg', 'Error: ' + (result.message || ''), true);
+          flashMsg('upiMsg', 'Error: ' + ((result && result.message) || 'Auth expired. Re-verify OTP.'), true);
         }
+      }).catch(function() {
+        flashMsg('upiMsg', 'Connection error or auth expired. Re-verify OTP.', true);
+      });
+    }
+
+    // ================================================================
+    // OTP FLOW FOR UPI SECURITY
+    // ================================================================
+    function showOtpFlow() {
+      document.getElementById('upiReadOnly').style.display = 'none';
+      document.getElementById('upiOtpFlow').style.display = 'block';
+      document.getElementById('upiEditFields').style.display = 'none';
+      document.getElementById('otpEmail').value = '';
+      document.getElementById('otpCode').value = '';
+      document.getElementById('otpCodeRow').style.display = 'none';
+    }
+
+    function hideOtpFlow() {
+      document.getElementById('upiReadOnly').style.display = 'block';
+      document.getElementById('upiOtpFlow').style.display = 'none';
+      document.getElementById('upiEditFields').style.display = 'none';
+      // Sign out any OTP session
+      if (supabaseClient) supabaseClient.auth.signOut();
+    }
+
+    function sendOtp() {
+      if (!supabaseClient) {
+        flashMsg('otpEmailMsg', 'Supabase client not loaded. Refresh page.', true);
+        return;
+      }
+
+      var email = document.getElementById('otpEmail').value.trim().toLowerCase();
+      if (!email) { flashMsg('otpEmailMsg', 'Enter your email', true); return; }
+      if (!email.endsWith('@amadeus.com')) {
+        flashMsg('otpEmailMsg', 'Only @amadeus.com emails are allowed', true);
+        return;
+      }
+
+      var btn = document.getElementById('sendOtpBtn');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      otpEmail = email;
+
+      supabaseClient.auth.signInWithOtp({ email: email })
+        .then(function(response) {
+          btn.disabled = false;
+          btn.textContent = 'Resend OTP';
+          if (response.error) {
+            flashMsg('otpEmailMsg', 'Error: ' + response.error.message, true);
+          } else {
+            flashMsg('otpEmailMsg', 'OTP sent to ' + email + '! Check your inbox.');
+            document.getElementById('otpCodeRow').style.display = 'block';
+            document.getElementById('otpCode').focus();
+          }
+        })
+        .catch(function(err) {
+          btn.disabled = false;
+          btn.textContent = 'Send OTP';
+          flashMsg('otpEmailMsg', 'Failed to send OTP. Try again.', true);
+        });
+    }
+
+    function verifyOtp() {
+      if (!supabaseClient || !otpEmail) return;
+
+      var code = document.getElementById('otpCode').value.trim();
+      if (!code || code.length !== 6) {
+        flashMsg('otpCodeMsg', 'Enter the 6-digit code', true);
+        return;
+      }
+
+      var btn = document.getElementById('verifyOtpBtn');
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+
+      supabaseClient.auth.verifyOtp({
+        email: otpEmail,
+        token: code,
+        type: 'email'
+      }).then(function(response) {
+        btn.disabled = false;
+        btn.textContent = 'Verify';
+        if (response.error) {
+          flashMsg('otpCodeMsg', 'Invalid or expired code. Try again.', true);
+        } else {
+          // OTP verified! Show editable UPI fields
+          document.getElementById('upiOtpFlow').style.display = 'none';
+          document.getElementById('upiEditFields').style.display = 'block';
+          document.getElementById('upiReadOnly').style.display = 'none';
+          showToast('Email verified! You can now edit UPI settings.', 'success');
+        }
+      }).catch(function() {
+        btn.disabled = false;
+        btn.textContent = 'Verify';
+        flashMsg('otpCodeMsg', 'Verification failed. Try again.', true);
       });
     }
 
