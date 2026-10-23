@@ -288,7 +288,7 @@
     .status-msg.success { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.15); }
     .status-msg.error { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.15); }
 
-    /* ── Contributors (3D Showcase) ── */
+    /* ── Contributors (Cartoon 2D) ── */
     .contributors-section { padding: 16px 24px 24px; border-top: 1px solid rgba(255,255,255,0.04); }
     .contributors-section h3 {
       font-size: 11px; color: #6b7280; margin-bottom: 14px;
@@ -299,201 +299,120 @@
       background: rgba(30,100,220,0.15); color: #6ea8fe;
       font-size: 11px; padding: 2px 10px; border-radius: 10px; font-weight: 700;
     }
-    .contributors-stage {
+    .contributors-cartoon-wrap {
       position: relative;
-      min-height: 230px;
       border-radius: 16px;
+      border: 1px solid rgba(110,168,254,0.18);
       overflow: hidden;
-      border: 1px solid rgba(110,168,254,0.2);
+      padding: 14px 12px 12px;
       background:
-        radial-gradient(120% 90% at 50% 0%, rgba(25,118,210,0.26), rgba(10,12,18,0.06) 48%, rgba(8,9,13,0.72) 100%),
-        linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
-      perspective: 1100px;
-      transform-style: preserve-3d;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 14px 24px rgba(0,0,0,0.38);
+        radial-gradient(150% 100% at 0% 0%, rgba(110,168,254,0.2), rgba(17,24,39,0.25) 58%, rgba(10,12,18,0.72)),
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 22px rgba(0,0,0,0.32);
     }
-    .contributors-stage::before {
+    .contributors-cartoon-wrap::before {
       content: '';
-      position: absolute;
-      width: 78%;
-      height: 12px;
-      bottom: 20px;
-      left: 11%;
-      border-radius: 999px;
-      background: radial-gradient(circle at center, rgba(30,100,220,0.45), rgba(30,100,220,0));
-      filter: blur(6px);
-      opacity: 0.8;
-      animation: floorPulse 3.6s ease-in-out infinite;
-    }
-    .contributors-stage::after {
-      content: '';
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      left: calc(50% - 130px);
-      top: calc(50% - 130px);
-      border-radius: 50%;
-      background: conic-gradient(from 0deg, rgba(59,130,246,0), rgba(59,130,246,0.28), rgba(59,130,246,0));
-      filter: blur(12px);
-      opacity: 0.5;
-      animation: ringSweep 7.2s linear infinite;
-      pointer-events: none;
-    }
-    .contributors-ring {
       position: absolute;
       inset: 0;
-      transform-style: preserve-3d;
-      will-change: transform;
-    }
-    .contributors-core {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) translateZ(30px);
-      width: 128px;
-      height: 128px;
-      border-radius: 50%;
-      border: 1px solid rgba(110,168,254,0.35);
-      background: radial-gradient(circle at 30% 30%, rgba(147,197,253,0.32), rgba(20,24,35,0.85));
-      box-shadow: 0 0 30px rgba(30,100,220,0.38), inset 0 0 16px rgba(255,255,255,0.08);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+      opacity: 0.26;
+      background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.32) 1px, transparent 0);
+      background-size: 12px 12px;
       pointer-events: none;
-      z-index: 2;
     }
-    .core-title {
-      font-size: 10px;
-      color: #9ca3af;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-    .core-sub {
-      font-size: 16px;
-      font-weight: 800;
-      color: #dbeafe;
-      letter-spacing: 0.4px;
-    }
-    .contrib-card3d {
+    .contributors-cloud {
       position: absolute;
-      left: 50%;
-      top: calc(50% + var(--rise, 0px));
-      transform-style: preserve-3d;
-      transform: rotateY(var(--angle)) translateZ(var(--depth)) translate(-50%, -50%);
+      width: 64px;
+      height: 20px;
+      border-radius: 999px;
+      background: rgba(191,219,254,0.22);
+      filter: blur(0.2px);
+      animation: cloudDrift 14s ease-in-out infinite;
+      pointer-events: none;
     }
-    .contrib-card3d-inner {
+    .contributors-cloud::before,
+    .contributors-cloud::after {
+      content: '';
+      position: absolute;
+      background: inherit;
+      border-radius: 50%;
+    }
+    .contributors-cloud::before { width: 20px; height: 20px; left: 12px; top: -8px; }
+    .contributors-cloud::after { width: 18px; height: 18px; right: 12px; top: -6px; }
+    .cloud-a { top: 14px; left: 12px; opacity: 0.6; }
+    .cloud-b { top: 10px; right: 14px; opacity: 0.45; animation-delay: -4s; }
+    .contributors-grid {
       position: relative;
-      min-width: 118px;
-      max-width: 160px;
-      border-radius: 14px;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .contrib-toon {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       padding: 8px 10px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
-      box-shadow: 0 8px 18px rgba(2,6,23,0.35), 0 0 0 rgba(59,130,246,0.2);
-      backdrop-filter: blur(3px);
-      text-align: center;
-      overflow: hidden;
-      animation: cardFloat 4.8s ease-in-out infinite;
+      border-radius: 14px;
+      border: 1px solid var(--toonBorder);
+      background: linear-gradient(135deg, var(--toonA), var(--toonB));
+      box-shadow: 0 4px 10px rgba(0,0,0,0.24);
+      animation: toonBob 3.2s ease-in-out infinite;
       animation-delay: var(--delay);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .contrib-card3d-inner:hover {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 10px 22px rgba(2,6,23,0.45), 0 0 18px rgba(59,130,246,0.32);
+    .contrib-toon:hover {
+      transform: translateY(-2px) rotate(-0.8deg);
+      box-shadow: 0 8px 14px rgba(0,0,0,0.28);
     }
-    .contrib-card3d-inner::after {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      background: linear-gradient(120deg, rgba(255,255,255,0.24), rgba(255,255,255,0), rgba(255,255,255,0.14));
-      opacity: 0.3;
-      pointer-events: none;
-    }
-    .contrib-card-initial {
+    .toon-avatar {
       width: 30px;
       height: 30px;
-      margin: 0 auto 6px;
       border-radius: 50%;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 13px;
       font-weight: 800;
-      color: #f8fbff;
-      border: 1px solid rgba(255,255,255,0.22);
-      background: radial-gradient(circle at 30% 30%, rgba(147,197,253,0.7), rgba(30,100,220,0.4));
+      color: #f8fafc;
+      border: 1px solid rgba(255,255,255,0.38);
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.42), rgba(15,23,42,0.12));
     }
-    .contrib-card-name {
+    .toon-name {
+      min-width: 0;
       font-size: 12px;
-      font-weight: 600;
-      color: #e5e7eb;
+      font-weight: 700;
+      color: #f8fbff;
+      letter-spacing: 0.1px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      letter-spacing: 0.1px;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.25);
     }
     .contributors-more {
       margin-top: 10px;
       text-align: center;
-      color: #6b7280;
+      color: #93c5fd;
       font-size: 12px;
-    }
-    .contrib-burst {
-      position: absolute;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(147,197,253,0.95), rgba(59,130,246,0.25));
-      pointer-events: none;
-      z-index: 4;
-      animation: burstOut 0.65s ease-out forwards;
+      font-weight: 600;
     }
     .no-contributors { text-align: center; color: #4b5563; font-size: 13px; padding: 20px; }
 
-    @keyframes floorPulse {
-      0%, 100% { opacity: 0.45; transform: scaleX(0.95); }
-      50% { opacity: 0.95; transform: scaleX(1.08); }
-    }
-    @keyframes cardFloat {
+    @keyframes toonBob {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-4px); }
     }
-    @keyframes ringSweep {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    @keyframes burstOut {
-      0% {
-        opacity: 0.95;
-        transform: translate(-50%, -50%) scale(0.2);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.4);
-      }
+    @keyframes cloudDrift {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(10px); }
     }
     @media (max-width: 560px) {
-      .contributors-stage { min-height: 195px; }
-      .contributors-core {
-        width: 98px;
-        height: 98px;
-      }
-      .core-title { font-size: 9px; }
-      .core-sub { font-size: 13px; }
-      .contrib-card3d-inner {
-        min-width: 92px;
-        max-width: 120px;
-        padding: 6px 8px;
-      }
-      .contrib-card-initial {
-        width: 24px;
-        height: 24px;
-        font-size: 11px;
-      }
-      .contrib-card-name { font-size: 10px; }
+      .contributors-cartoon-wrap { padding: 10px 8px 8px; }
+      .contributors-grid { gap: 8px; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); }
+      .contrib-toon { padding: 7px 8px; gap: 6px; border-radius: 12px; }
+      .toon-avatar { width: 24px; height: 24px; font-size: 11px; }
+      .toon-name { font-size: 10px; }
     }
 
     /* ── Spinner ── */
@@ -703,17 +622,14 @@
     var currentUpiUri = '';
     var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     var isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    var contributorScene = {
-      rafId: 0,
-      angle: 0,
-      speed: 0.34,
-      targetSpeed: 0.34,
-      tiltX: -12,
-      tiltY: 0,
-      targetTiltX: -12,
-      targetTiltY: 0,
-      lastBurstAt: 0
-    };
+    var contributorPalette = [
+      ['rgba(59,130,246,0.42)', 'rgba(37,99,235,0.2)', 'rgba(147,197,253,0.35)'],
+      ['rgba(16,185,129,0.42)', 'rgba(5,150,105,0.2)', 'rgba(110,231,183,0.35)'],
+      ['rgba(245,158,11,0.42)', 'rgba(217,119,6,0.22)', 'rgba(253,224,71,0.35)'],
+      ['rgba(168,85,247,0.42)', 'rgba(124,58,237,0.2)', 'rgba(216,180,254,0.35)'],
+      ['rgba(236,72,153,0.42)', 'rgba(190,24,93,0.2)', 'rgba(251,182,206,0.35)'],
+      ['rgba(20,184,166,0.42)', 'rgba(13,148,136,0.2)', 'rgba(153,246,228,0.35)']
+    ];
 
     function supabaseHeaders() {
       return {
@@ -994,10 +910,9 @@
       })
       .then(function(data) {
         document.getElementById('contribCount').textContent = data.length;
-        renderContributors3D(data);
+        renderContributorsCartoon(data);
       })
       .catch(function() {
-        stopContributors3D();
         document.getElementById('contributorsList').innerHTML =
           '<div class="no-contributors">Could not load contributions.</div>';
       });
@@ -1008,126 +923,32 @@
       return txt ? txt.charAt(0).toUpperCase() : '?';
     }
 
-    function stopContributors3D() {
-      if (contributorScene.rafId) {
-        cancelAnimationFrame(contributorScene.rafId);
-        contributorScene.rafId = 0;
-      }
+    function getCartoonPalette(index) {
+      return contributorPalette[index % contributorPalette.length];
     }
 
-    function startContributors3D() {
-      var stage = document.getElementById('contributorsStage');
-      var ring = document.getElementById('contributorsRing');
-      if (!stage || !ring) return;
-
-      stopContributors3D();
-
-      contributorScene.speed = 0.34;
-      contributorScene.targetSpeed = 0.34;
-      contributorScene.targetTiltX = -12;
-      contributorScene.targetTiltY = 0;
-
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        ring.style.transform = 'rotateX(-12deg) rotateY(24deg)';
-        return;
-      }
-
-      stage.onpointermove = function(e) {
-        var rect = stage.getBoundingClientRect();
-        var nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-        var ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-        contributorScene.targetTiltY = nx * 18;
-        contributorScene.targetTiltX = -12 + (ny * 7);
-        contributorScene.targetSpeed = 1.02;
-
-        var now = Date.now();
-        if (now - contributorScene.lastBurstAt > 95) {
-          contributorScene.lastBurstAt = now;
-          spawnContributorBurst(stage, e.clientX - rect.left, e.clientY - rect.top);
-        }
-      };
-
-      stage.onpointerleave = function() {
-        contributorScene.targetTiltX = -12;
-        contributorScene.targetTiltY = 0;
-        contributorScene.targetSpeed = 0.34;
-      };
-
-      function frame() {
-        var orbit = document.getElementById('contributorsRing');
-        if (!orbit) {
-          stopContributors3D();
-          return;
-        }
-        contributorScene.speed += (contributorScene.targetSpeed - contributorScene.speed) * 0.08;
-        contributorScene.targetSpeed += (0.34 - contributorScene.targetSpeed) * 0.03;
-        contributorScene.angle = (contributorScene.angle + contributorScene.speed) % 360;
-        contributorScene.tiltX += (contributorScene.targetTiltX - contributorScene.tiltX) * 0.08;
-        contributorScene.tiltY += (contributorScene.targetTiltY - contributorScene.tiltY) * 0.08;
-        orbit.style.transform =
-          'rotateX(' + contributorScene.tiltX.toFixed(2) + 'deg) '
-          + 'rotateY(' + (contributorScene.angle + contributorScene.tiltY).toFixed(2) + 'deg)';
-        contributorScene.rafId = requestAnimationFrame(frame);
-      }
-      contributorScene.rafId = requestAnimationFrame(frame);
-    }
-
-    function spawnContributorBurst(stage, x, y) {
-      for (var i = 0; i < 6; i++) {
-        var p = document.createElement('span');
-        p.className = 'contrib-burst';
-        p.style.left = x + 'px';
-        p.style.top = y + 'px';
-        var ang = (Math.PI * 2 * i / 6) + (Math.random() * 0.6);
-        var dist = 16 + Math.random() * 20;
-        p.style.setProperty('--dx', Math.cos(ang) * dist + 'px');
-        p.style.setProperty('--dy', Math.sin(ang) * dist + 'px');
-        stage.appendChild(p);
-        setTimeout(function(el) {
-          if (el && el.parentNode) el.parentNode.removeChild(el);
-        }, 680, p);
-      }
-    }
-
-    function renderContributors3D(data) {
+    function renderContributorsCartoon(data) {
       var listEl = document.getElementById('contributorsList');
-      stopContributors3D();
 
       if (!data || data.length === 0) {
         listEl.innerHTML = '<div class="no-contributors">No contributions yet. Be the first!</div>';
         return;
       }
 
-      var compact = window.matchMedia && window.matchMedia('(max-width: 560px)').matches;
-      var perLayer = compact ? 12 : 14;
-      var maxLayers = 3;
-      var maxCards = Math.min(data.length, perLayer * maxLayers);
-      var baseDepth = compact ? 90 : 122;
-      var depthStep = compact ? 20 : 24;
-      var riseStep = compact ? 16 : 22;
-      var layersUsed = Math.ceil(maxCards / perLayer);
-      var html = '<div class="contributors-stage" id="contributorsStage">'
-        + '<div class="contributors-core">'
-        + '<div class="core-title">Farewell Vibes</div>'
-        + '<div class="core-sub">Shiva</div>'
-        + '</div>'
-        + '<div class="contributors-ring" id="contributorsRing">';
+      var maxCards = Math.min(data.length, 72);
+      var html = '<div class="contributors-cartoon-wrap">'
+        + '<span class="contributors-cloud cloud-a"></span>'
+        + '<span class="contributors-cloud cloud-b"></span>'
+        + '<div class="contributors-grid">';
 
       for (var i = 0; i < maxCards; i++) {
         var c = data[i];
-        var layer = Math.floor(i / perLayer);
-        var slot = i % perLayer;
-        var cardsInLayer = Math.min(perLayer, maxCards - (layer * perLayer));
-        var angle = Math.round((360 / cardsInLayer) * slot) + (layer * 9);
-        var depth = baseDepth + (layer * depthStep) + ((slot % 2) * 8);
-        var rise = (layer - ((layersUsed - 1) / 2)) * riseStep;
+        var palette = getCartoonPalette(i);
         var name = escapeHtml(c.name || 'Contributor');
         var initial = escapeHtml(getContributorInitial(c.name));
-        html += '<div class="contrib-card3d" style="--angle:' + angle + 'deg;--depth:' + depth + 'px;--rise:' + rise + 'px;--delay:' + (i * 0.07).toFixed(2) + 's;">'
-          + '<div class="contrib-card3d-inner">'
-          + '<div class="contrib-card-initial">' + initial + '</div>'
-          + '<div class="contrib-card-name">' + name + '</div>'
-          + '</div>'
+        html += '<div class="contrib-toon" style="--delay:' + (i * 0.045).toFixed(2) + 's;--toonA:' + palette[0] + ';--toonB:' + palette[1] + ';--toonBorder:' + palette[2] + ';">'
+          + '<div class="toon-avatar">' + initial + '</div>'
+          + '<div class="toon-name" title="' + name + '">' + name + '</div>'
           + '</div>';
       }
 
@@ -1136,7 +957,6 @@
         html += '<div class="contributors-more">+' + (data.length - maxCards) + ' more amazing contributors</div>';
       }
       listEl.innerHTML = html;
-      startContributors3D();
     }
 
     function showStatus(msg, type) {
