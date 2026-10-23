@@ -3,7 +3,6 @@
 UPDATE settings
 SET
   event_name = 'Shiva''s Farewell Contribution',
-  target_amount = 10000,
   message = 'Hi Team,
 
 As Shiva Prasad is moving to a different team, let''s take some time to get together and wish him all the very best for his next journey.

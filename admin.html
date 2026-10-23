@@ -338,20 +338,8 @@
       <!-- Stats -->
       <div class="stats-row">
         <div class="stat-card">
-          <div class="label">Total Collected</div>
-          <div class="value purple" id="statTotal">₹0</div>
-        </div>
-        <div class="stat-card">
           <div class="label">Contributors</div>
           <div class="value" id="statCount">0</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">Target</div>
-          <div class="value" id="statTarget">₹0</div>
-        </div>
-        <div class="stat-card">
-          <div class="label">Progress</div>
-          <div class="value green" id="statProgress">0%</div>
         </div>
       </div>
 
@@ -365,10 +353,6 @@
           <div class="form-row">
             <label>Event Name</label>
             <input type="text" id="setEventName" maxlength="200" />
-          </div>
-          <div class="form-row">
-            <label>Target Amount (₹)</label>
-            <input type="number" id="setTargetAmount" min="0" />
           </div>
           <div class="form-row">
             <label>Deadline (leave empty for no deadline)</label>
@@ -662,7 +646,6 @@
 
     function populateSettingsForm() {
       document.getElementById('setEventName').value = settings.event_name || '';
-      document.getElementById('setTargetAmount').value = settings.target_amount || 0;
       document.getElementById('setUpiId').value = settings.upi_id || '';
       document.getElementById('setUpiNumber').value = settings.upi_number || '';
       document.getElementById('setPayeeName').value = settings.payee_name || '';
@@ -670,7 +653,6 @@
       document.getElementById('upiDisplayPhone').textContent = settings.upi_number || '—';
       document.getElementById('upiDisplayPayee').textContent = settings.payee_name || '—';
       document.getElementById('setMessage').value = settings.message || '';
-      document.getElementById('statTarget').textContent = '₹' + (settings.target_amount || 0).toLocaleString('en-IN');
 
       // Deadline
       if (settings.deadline) {
@@ -773,14 +755,7 @@
       var eventContribs = contributions.filter(function(c) {
         return c.event_name === settings.event_name;
       });
-      var total = 0;
-      eventContribs.forEach(function(c) { total += parseFloat(c.amount) || 0; });
-      var target = settings.target_amount || 1;
-      var pct = Math.min(100, Math.round((total / target) * 100));
-
-      document.getElementById('statTotal').textContent = '₹' + total.toLocaleString('en-IN');
       document.getElementById('statCount').textContent = eventContribs.length;
-      document.getElementById('statProgress').textContent = pct + '%';
     }
 
     // ================================================================
@@ -813,14 +788,12 @@
     // ================================================================
     function saveEventSettings() {
       var name = document.getElementById('setEventName').value.trim();
-      var target = parseFloat(document.getElementById('setTargetAmount').value);
       var deadlineVal = document.getElementById('setDeadline').value;
       if (!name) { flashMsg('eventMsg', 'Event name required', true); return; }
 
       var params = {
         pwd: adminPassword,
-        p_event_name: name,
-        p_target_amount: target || 0
+        p_event_name: name
       };
 
       // Send deadline as ISO string, or empty string to clear
@@ -833,12 +806,10 @@
       sbRpc('update_settings', params).then(function(result) {
         if (result && result.success) {
           settings.event_name = name;
-          settings.target_amount = target;
           settings.deadline = deadlineVal ? new Date(deadlineVal).toISOString() : null;
           flashMsg('eventMsg', 'Saved!');
           updateStats();
           populateSettingsForm();
-          document.getElementById('statTarget').textContent = '₹' + (target || 0).toLocaleString('en-IN');
         } else {
           flashMsg('eventMsg', 'Error: ' + (result.message || ''), true);
         }
