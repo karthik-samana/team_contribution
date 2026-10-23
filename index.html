@@ -189,60 +189,6 @@
 
     /* ── Form ── */
     .form-section { padding: 20px 24px 24px; }
-    .form-flight-strip {
-      position: relative;
-      height: 52px;
-      border-radius: 12px;
-      margin-bottom: 14px;
-      overflow: hidden;
-      border: 1px solid rgba(110,168,254,0.18);
-      background:
-        radial-gradient(130% 100% at 10% 10%, rgba(59,130,246,0.22), rgba(10,12,18,0.1) 52%, rgba(10,12,18,0.7)),
-        linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
-    }
-    .form-flight-route {
-      position: absolute;
-      left: 6%;
-      right: 6%;
-      top: 50%;
-      transform: translateY(-50%);
-      border-top: 1px dashed rgba(147,197,253,0.45);
-      opacity: 0.9;
-    }
-    .flight-plane {
-      position: absolute;
-      top: 50%;
-      left: -14%;
-      transform: translateY(-50%);
-      font-size: 15px;
-      color: #bfdbfe;
-      filter: drop-shadow(0 0 6px rgba(59,130,246,0.55));
-      animation: flightRun 5.8s linear infinite;
-      will-change: transform;
-    }
-    .flight-plane::after {
-      content: '';
-      position: absolute;
-      left: -30px;
-      top: 7px;
-      width: 26px;
-      height: 2px;
-      background: linear-gradient(90deg, rgba(147,197,253,0), rgba(147,197,253,0.8));
-      border-radius: 999px;
-    }
-    .flight-plane.p2 {
-      animation-duration: 7.4s;
-      animation-delay: -2.2s;
-      opacity: 0.7;
-      font-size: 13px;
-    }
-    .flight-plane.p3 {
-      animation-duration: 9.1s;
-      animation-delay: -4.1s;
-      opacity: 0.55;
-      font-size: 12px;
-    }
     .form-group { margin-bottom: 18px; }
     .form-group label {
       display: block; font-size: 11px; font-weight: 600; color: #6b7280;
@@ -529,12 +475,6 @@
         transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.4);
       }
     }
-    @keyframes flightRun {
-      0% { transform: translate(-16px, -50%); opacity: 0; }
-      5% { opacity: 0.95; }
-      95% { opacity: 0.9; }
-      100% { transform: translate(calc(100vw + 30px), -50%); opacity: 0; }
-    }
     @media (max-width: 560px) {
       .contributors-stage { min-height: 195px; }
       .contributors-core {
@@ -554,8 +494,6 @@
         font-size: 11px;
       }
       .contrib-card-name { font-size: 10px; }
-      .form-flight-strip { height: 46px; }
-      .flight-plane { font-size: 13px; }
     }
 
     /* ── Spinner ── */
@@ -667,12 +605,6 @@
     </div>
 
     <div class="form-section" id="formSection">
-      <div class="form-flight-strip" aria-hidden="true">
-        <div class="form-flight-route"></div>
-        <div class="flight-plane p1">&#9992;</div>
-        <div class="flight-plane p2">&#9992;</div>
-        <div class="flight-plane p3">&#9992;</div>
-      </div>
       <div class="form-group">
         <label for="nameInput">Your Name</label>
         <input type="text" id="nameInput" placeholder="e.g. Ojas Gambheera" maxlength="100" autocomplete="name" />
