@@ -288,7 +288,7 @@
     .status-msg.success { background: rgba(34,197,94,0.1); color: #4ade80; border: 1px solid rgba(34,197,94,0.15); }
     .status-msg.error { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.15); }
 
-    /* ── Contributors ── */
+    /* ── Contributors (3D Showcase) ── */
     .contributors-section { padding: 16px 24px 24px; border-top: 1px solid rgba(255,255,255,0.04); }
     .contributors-section h3 {
       font-size: 11px; color: #6b7280; margin-bottom: 14px;
@@ -299,15 +299,165 @@
       background: rgba(30,100,220,0.15); color: #6ea8fe;
       font-size: 11px; padding: 2px 10px; border-radius: 10px; font-weight: 700;
     }
-    .contributors-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .contrib-chip {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 14px; background: rgba(255,255,255,0.04);
-      border-radius: 20px; font-size: 13px; font-weight: 500; color: #b0b8c8;
-      border: 1px solid rgba(255,255,255,0.06);
+    .contributors-stage {
+      position: relative;
+      min-height: 230px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(110,168,254,0.15);
+      background:
+        radial-gradient(120% 90% at 50% 0%, rgba(25,118,210,0.24), rgba(10,12,18,0.08) 46%, rgba(8,9,13,0.68) 100%),
+        linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
+      perspective: 1100px;
+      transform-style: preserve-3d;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 14px 24px rgba(0,0,0,0.35);
     }
-    .contrib-chip .chip-dot { width: 5px; height: 5px; border-radius: 50%; background: #4ade80; flex-shrink: 0; }
+    .contributors-stage::before {
+      content: '';
+      position: absolute;
+      width: 78%;
+      height: 12px;
+      bottom: 20px;
+      left: 11%;
+      border-radius: 999px;
+      background: radial-gradient(circle at center, rgba(30,100,220,0.45), rgba(30,100,220,0));
+      filter: blur(6px);
+      opacity: 0.8;
+      animation: floorPulse 4s ease-in-out infinite;
+    }
+    .contributors-ring {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .contributors-core {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) translateZ(30px);
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      border: 1px solid rgba(110,168,254,0.35);
+      background: radial-gradient(circle at 30% 30%, rgba(147,197,253,0.32), rgba(20,24,35,0.85));
+      box-shadow: 0 0 28px rgba(30,100,220,0.35), inset 0 0 16px rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      pointer-events: none;
+    }
+    .core-title {
+      font-size: 10px;
+      color: #9ca3af;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .core-sub {
+      font-size: 16px;
+      font-weight: 800;
+      color: #dbeafe;
+      letter-spacing: 0.4px;
+    }
+    .contrib-card3d {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-style: preserve-3d;
+      transform: rotateY(var(--angle)) translateZ(var(--depth)) translate(-50%, -50%);
+    }
+    .contrib-card3d-inner {
+      position: relative;
+      min-width: 118px;
+      max-width: 160px;
+      border-radius: 14px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+      box-shadow: 0 8px 18px rgba(2,6,23,0.35);
+      backdrop-filter: blur(3px);
+      text-align: center;
+      overflow: hidden;
+      animation: cardFloat 5.2s ease-in-out infinite;
+      animation-delay: var(--delay);
+    }
+    .contrib-card3d-inner::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(120deg, rgba(255,255,255,0.2), rgba(255,255,255,0), rgba(255,255,255,0.14));
+      opacity: 0.28;
+      pointer-events: none;
+    }
+    .contrib-card-initial {
+      width: 30px;
+      height: 30px;
+      margin: 0 auto 6px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: #f8fbff;
+      border: 1px solid rgba(255,255,255,0.22);
+      background: radial-gradient(circle at 30% 30%, rgba(147,197,253,0.7), rgba(30,100,220,0.4));
+    }
+    .contrib-card-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #e5e7eb;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+      letter-spacing: 0.1px;
+    }
+    .contrib-card-amount {
+      font-size: 11px;
+      color: #93c5fd;
+      font-weight: 700;
+    }
+    .contributors-more {
+      margin-top: 10px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 12px;
+    }
     .no-contributors { text-align: center; color: #4b5563; font-size: 13px; padding: 20px; }
+
+    @keyframes floorPulse {
+      0%, 100% { opacity: 0.45; transform: scaleX(0.95); }
+      50% { opacity: 0.9; transform: scaleX(1.05); }
+    }
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @media (max-width: 560px) {
+      .contributors-stage { min-height: 195px; }
+      .contributors-core {
+        width: 98px;
+        height: 98px;
+      }
+      .core-title { font-size: 9px; }
+      .core-sub { font-size: 13px; }
+      .contrib-card3d-inner {
+        min-width: 92px;
+        max-width: 120px;
+        padding: 6px 8px;
+      }
+      .contrib-card-initial {
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+      }
+      .contrib-card-name { font-size: 10px; }
+      .contrib-card-amount { font-size: 10px; }
+    }
 
     /* ── Spinner ── */
     .spinner {
@@ -516,6 +666,14 @@
     var currentUpiUri = '';
     var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     var isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    var contributorScene = {
+      rafId: 0,
+      angle: 0,
+      tiltX: -12,
+      tiltY: 0,
+      targetTiltX: -12,
+      targetTiltY: 0
+    };
 
     function supabaseHeaders() {
       return {
@@ -802,23 +960,114 @@
         document.getElementById('progressBar').style.width = pct + '%';
         document.getElementById('progressPercent').textContent = pct + '% collected';
 
-        var listEl = document.getElementById('contributorsList');
         document.getElementById('contribCount').textContent = data.length;
-        if (data.length === 0) {
-          listEl.innerHTML = '<div class="no-contributors">No contributions yet. Be the first!</div>';
-          return;
-        }
-        var html = '<div class="contributors-chips">';
-        data.forEach(function(c) {
-          html += '<div class="contrib-chip"><span class="chip-dot"></span>' + escapeHtml(c.name) + '</div>';
-        });
-        html += '</div>';
-        listEl.innerHTML = html;
+        renderContributors3D(data);
       })
       .catch(function() {
+        stopContributors3D();
         document.getElementById('contributorsList').innerHTML =
           '<div class="no-contributors">Could not load contributions.</div>';
       });
+    }
+
+    function getContributorInitial(name) {
+      var txt = (name || '').replace(/\s+/g, ' ').trim();
+      return txt ? txt.charAt(0).toUpperCase() : '?';
+    }
+
+    function stopContributors3D() {
+      if (contributorScene.rafId) {
+        cancelAnimationFrame(contributorScene.rafId);
+        contributorScene.rafId = 0;
+      }
+    }
+
+    function startContributors3D() {
+      var stage = document.getElementById('contributorsStage');
+      var ring = document.getElementById('contributorsRing');
+      if (!stage || !ring) return;
+
+      stopContributors3D();
+
+      contributorScene.targetTiltX = -12;
+      contributorScene.targetTiltY = 0;
+
+      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        ring.style.transform = 'rotateX(-12deg) rotateY(24deg)';
+        return;
+      }
+
+      stage.onpointermove = function(e) {
+        var rect = stage.getBoundingClientRect();
+        var nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+        var ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+        contributorScene.targetTiltY = nx * 18;
+        contributorScene.targetTiltX = -12 + (ny * 7);
+      };
+
+      stage.onpointerleave = function() {
+        contributorScene.targetTiltX = -12;
+        contributorScene.targetTiltY = 0;
+      };
+
+      function frame() {
+        var orbit = document.getElementById('contributorsRing');
+        if (!orbit) {
+          stopContributors3D();
+          return;
+        }
+        contributorScene.angle = (contributorScene.angle + 0.18) % 360;
+        contributorScene.tiltX += (contributorScene.targetTiltX - contributorScene.tiltX) * 0.08;
+        contributorScene.tiltY += (contributorScene.targetTiltY - contributorScene.tiltY) * 0.08;
+        orbit.style.transform =
+          'rotateX(' + contributorScene.tiltX.toFixed(2) + 'deg) '
+          + 'rotateY(' + (contributorScene.angle + contributorScene.tiltY).toFixed(2) + 'deg)';
+        contributorScene.rafId = requestAnimationFrame(frame);
+      }
+      contributorScene.rafId = requestAnimationFrame(frame);
+    }
+
+    function renderContributors3D(data) {
+      var listEl = document.getElementById('contributorsList');
+      stopContributors3D();
+
+      if (!data || data.length === 0) {
+        listEl.innerHTML = '<div class="no-contributors">No contributions yet. Be the first!</div>';
+        return;
+      }
+
+      var maxCards = Math.min(data.length, 24);
+      var baseDepth = window.matchMedia && window.matchMedia('(max-width: 560px)').matches ? 88 : 122;
+      var depthStep = window.matchMedia && window.matchMedia('(max-width: 560px)').matches ? 14 : 22;
+      var html = '<div class="contributors-stage" id="contributorsStage">'
+        + '<div class="contributors-core">'
+        + '<div class="core-title">Farewell Vibes</div>'
+        + '<div class="core-sub">Shiva</div>'
+        + '</div>'
+        + '<div class="contributors-ring" id="contributorsRing">';
+
+      for (var i = 0; i < maxCards; i++) {
+        var c = data[i];
+        var angle = Math.round((360 / maxCards) * i);
+        var depth = baseDepth + ((i % 3) * depthStep);
+        var name = escapeHtml(c.name || 'Contributor');
+        var initial = escapeHtml(getContributorInitial(c.name));
+        var amount = parseFloat(c.amount) || 0;
+        html += '<div class="contrib-card3d" style="--angle:' + angle + 'deg;--depth:' + depth + 'px;--delay:' + (i * 0.07).toFixed(2) + 's;">'
+          + '<div class="contrib-card3d-inner">'
+          + '<div class="contrib-card-initial">' + initial + '</div>'
+          + '<div class="contrib-card-name">' + name + '</div>'
+          + '<div class="contrib-card-amount">₹' + amount.toLocaleString('en-IN') + '</div>'
+          + '</div>'
+          + '</div>';
+      }
+
+      html += '</div></div>';
+      if (data.length > maxCards) {
+        html += '<div class="contributors-more">+' + (data.length - maxCards) + ' more amazing contributors</div>';
+      }
+      listEl.innerHTML = html;
+      startContributors3D();
     }
 
     function showStatus(msg, type) {
