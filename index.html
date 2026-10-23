@@ -189,6 +189,60 @@
 
     /* ── Form ── */
     .form-section { padding: 20px 24px 24px; }
+    .form-flight-strip {
+      position: relative;
+      height: 52px;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(110,168,254,0.18);
+      background:
+        radial-gradient(130% 100% at 10% 10%, rgba(59,130,246,0.22), rgba(10,12,18,0.1) 52%, rgba(10,12,18,0.7)),
+        linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .form-flight-route {
+      position: absolute;
+      left: 6%;
+      right: 6%;
+      top: 50%;
+      transform: translateY(-50%);
+      border-top: 1px dashed rgba(147,197,253,0.45);
+      opacity: 0.9;
+    }
+    .flight-plane {
+      position: absolute;
+      top: 50%;
+      left: -14%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      color: #bfdbfe;
+      filter: drop-shadow(0 0 6px rgba(59,130,246,0.55));
+      animation: flightRun 5.8s linear infinite;
+      will-change: transform;
+    }
+    .flight-plane::after {
+      content: '';
+      position: absolute;
+      left: -30px;
+      top: 7px;
+      width: 26px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(147,197,253,0), rgba(147,197,253,0.8));
+      border-radius: 999px;
+    }
+    .flight-plane.p2 {
+      animation-duration: 7.4s;
+      animation-delay: -2.2s;
+      opacity: 0.7;
+      font-size: 13px;
+    }
+    .flight-plane.p3 {
+      animation-duration: 9.1s;
+      animation-delay: -4.1s;
+      opacity: 0.55;
+      font-size: 12px;
+    }
     .form-group { margin-bottom: 18px; }
     .form-group label {
       display: block; font-size: 11px; font-weight: 600; color: #6b7280;
@@ -304,13 +358,13 @@
       min-height: 230px;
       border-radius: 16px;
       overflow: hidden;
-      border: 1px solid rgba(110,168,254,0.15);
+      border: 1px solid rgba(110,168,254,0.2);
       background:
-        radial-gradient(120% 90% at 50% 0%, rgba(25,118,210,0.24), rgba(10,12,18,0.08) 46%, rgba(8,9,13,0.68) 100%),
+        radial-gradient(120% 90% at 50% 0%, rgba(25,118,210,0.26), rgba(10,12,18,0.06) 48%, rgba(8,9,13,0.72) 100%),
         linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0));
       perspective: 1100px;
       transform-style: preserve-3d;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 14px 24px rgba(0,0,0,0.35);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 14px 24px rgba(0,0,0,0.38);
     }
     .contributors-stage::before {
       content: '';
@@ -323,7 +377,21 @@
       background: radial-gradient(circle at center, rgba(30,100,220,0.45), rgba(30,100,220,0));
       filter: blur(6px);
       opacity: 0.8;
-      animation: floorPulse 4s ease-in-out infinite;
+      animation: floorPulse 3.6s ease-in-out infinite;
+    }
+    .contributors-stage::after {
+      content: '';
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      left: calc(50% - 130px);
+      top: calc(50% - 130px);
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, rgba(59,130,246,0), rgba(59,130,246,0.28), rgba(59,130,246,0));
+      filter: blur(12px);
+      opacity: 0.5;
+      animation: ringSweep 7.2s linear infinite;
+      pointer-events: none;
     }
     .contributors-ring {
       position: absolute;
@@ -341,13 +409,14 @@
       border-radius: 50%;
       border: 1px solid rgba(110,168,254,0.35);
       background: radial-gradient(circle at 30% 30%, rgba(147,197,253,0.32), rgba(20,24,35,0.85));
-      box-shadow: 0 0 28px rgba(30,100,220,0.35), inset 0 0 16px rgba(255,255,255,0.08);
+      box-shadow: 0 0 30px rgba(30,100,220,0.38), inset 0 0 16px rgba(255,255,255,0.08);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
       pointer-events: none;
+      z-index: 2;
     }
     .core-title {
       font-size: 10px;
@@ -365,7 +434,7 @@
     .contrib-card3d {
       position: absolute;
       left: 50%;
-      top: 50%;
+      top: calc(50% + var(--rise, 0px));
       transform-style: preserve-3d;
       transform: rotateY(var(--angle)) translateZ(var(--depth)) translate(-50%, -50%);
     }
@@ -376,20 +445,25 @@
       border-radius: 14px;
       padding: 8px 10px;
       border: 1px solid rgba(255,255,255,0.14);
-      background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
-      box-shadow: 0 8px 18px rgba(2,6,23,0.35);
+      background: linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
+      box-shadow: 0 8px 18px rgba(2,6,23,0.35), 0 0 0 rgba(59,130,246,0.2);
       backdrop-filter: blur(3px);
       text-align: center;
       overflow: hidden;
-      animation: cardFloat 5.2s ease-in-out infinite;
+      animation: cardFloat 4.8s ease-in-out infinite;
       animation-delay: var(--delay);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .contrib-card3d-inner:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 10px 22px rgba(2,6,23,0.45), 0 0 18px rgba(59,130,246,0.32);
     }
     .contrib-card3d-inner::after {
       content: '';
       position: absolute;
       inset: -1px;
-      background: linear-gradient(120deg, rgba(255,255,255,0.2), rgba(255,255,255,0), rgba(255,255,255,0.14));
-      opacity: 0.28;
+      background: linear-gradient(120deg, rgba(255,255,255,0.24), rgba(255,255,255,0), rgba(255,255,255,0.14));
+      opacity: 0.3;
       pointer-events: none;
     }
     .contrib-card-initial {
@@ -413,13 +487,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-bottom: 2px;
       letter-spacing: 0.1px;
-    }
-    .contrib-card-amount {
-      font-size: 11px;
-      color: #93c5fd;
-      font-weight: 700;
     }
     .contributors-more {
       margin-top: 10px;
@@ -427,15 +495,45 @@
       color: #6b7280;
       font-size: 12px;
     }
+    .contrib-burst {
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(147,197,253,0.95), rgba(59,130,246,0.25));
+      pointer-events: none;
+      z-index: 4;
+      animation: burstOut 0.65s ease-out forwards;
+    }
     .no-contributors { text-align: center; color: #4b5563; font-size: 13px; padding: 20px; }
 
     @keyframes floorPulse {
       0%, 100% { opacity: 0.45; transform: scaleX(0.95); }
-      50% { opacity: 0.9; transform: scaleX(1.05); }
+      50% { opacity: 0.95; transform: scaleX(1.08); }
     }
     @keyframes cardFloat {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-8px); }
+    }
+    @keyframes ringSweep {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes burstOut {
+      0% {
+        opacity: 0.95;
+        transform: translate(-50%, -50%) scale(0.2);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.4);
+      }
+    }
+    @keyframes flightRun {
+      0% { transform: translate(-16px, -50%); opacity: 0; }
+      5% { opacity: 0.95; }
+      95% { opacity: 0.9; }
+      100% { transform: translate(calc(100vw + 30px), -50%); opacity: 0; }
     }
     @media (max-width: 560px) {
       .contributors-stage { min-height: 195px; }
@@ -456,7 +554,8 @@
         font-size: 11px;
       }
       .contrib-card-name { font-size: 10px; }
-      .contrib-card-amount { font-size: 10px; }
+      .form-flight-strip { height: 46px; }
+      .flight-plane { font-size: 13px; }
     }
 
     /* ── Spinner ── */
@@ -568,6 +667,12 @@
     </div>
 
     <div class="form-section" id="formSection">
+      <div class="form-flight-strip" aria-hidden="true">
+        <div class="form-flight-route"></div>
+        <div class="flight-plane p1">&#9992;</div>
+        <div class="flight-plane p2">&#9992;</div>
+        <div class="flight-plane p3">&#9992;</div>
+      </div>
       <div class="form-group">
         <label for="nameInput">Your Name</label>
         <input type="text" id="nameInput" placeholder="e.g. Ojas Gambheera" maxlength="100" autocomplete="name" />
@@ -669,10 +774,13 @@
     var contributorScene = {
       rafId: 0,
       angle: 0,
+      speed: 0.34,
+      targetSpeed: 0.34,
       tiltX: -12,
       tiltY: 0,
       targetTiltX: -12,
-      targetTiltY: 0
+      targetTiltY: 0,
+      lastBurstAt: 0
     };
 
     function supabaseHeaders() {
@@ -944,7 +1052,7 @@
 
     function loadContributions() {
       var query = '?event_name=eq.' + encodeURIComponent(CONFIG.EVENT_NAME)
-        + '&order=created_at.desc&select=name,amount,created_at,status';
+        + '&order=created_at.desc&select=name,created_at,status';
       fetch(supabaseUrl('contributions', query), {
         method: 'GET', headers: supabaseHeaders()
       })
@@ -953,13 +1061,6 @@
         return res.json();
       })
       .then(function(data) {
-        var total = 0;
-        data.forEach(function(c) { total += parseFloat(c.amount) || 0; });
-        var pct = CONFIG.TARGET_AMOUNT > 0 ? Math.min(100, Math.round((total / CONFIG.TARGET_AMOUNT) * 100)) : 0;
-        document.getElementById('totalCollected').textContent = '\u20B9' + total.toLocaleString('en-IN');
-        document.getElementById('progressBar').style.width = pct + '%';
-        document.getElementById('progressPercent').textContent = pct + '% collected';
-
         document.getElementById('contribCount').textContent = data.length;
         renderContributors3D(data);
       })
@@ -989,6 +1090,8 @@
 
       stopContributors3D();
 
+      contributorScene.speed = 0.34;
+      contributorScene.targetSpeed = 0.34;
       contributorScene.targetTiltX = -12;
       contributorScene.targetTiltY = 0;
 
@@ -1003,11 +1106,19 @@
         var ny = ((e.clientY - rect.top) / rect.height) * 2 - 1;
         contributorScene.targetTiltY = nx * 18;
         contributorScene.targetTiltX = -12 + (ny * 7);
+        contributorScene.targetSpeed = 1.02;
+
+        var now = Date.now();
+        if (now - contributorScene.lastBurstAt > 95) {
+          contributorScene.lastBurstAt = now;
+          spawnContributorBurst(stage, e.clientX - rect.left, e.clientY - rect.top);
+        }
       };
 
       stage.onpointerleave = function() {
         contributorScene.targetTiltX = -12;
         contributorScene.targetTiltY = 0;
+        contributorScene.targetSpeed = 0.34;
       };
 
       function frame() {
@@ -1016,7 +1127,9 @@
           stopContributors3D();
           return;
         }
-        contributorScene.angle = (contributorScene.angle + 0.18) % 360;
+        contributorScene.speed += (contributorScene.targetSpeed - contributorScene.speed) * 0.08;
+        contributorScene.targetSpeed += (0.34 - contributorScene.targetSpeed) * 0.03;
+        contributorScene.angle = (contributorScene.angle + contributorScene.speed) % 360;
         contributorScene.tiltX += (contributorScene.targetTiltX - contributorScene.tiltX) * 0.08;
         contributorScene.tiltY += (contributorScene.targetTiltY - contributorScene.tiltY) * 0.08;
         orbit.style.transform =
@@ -1025,6 +1138,23 @@
         contributorScene.rafId = requestAnimationFrame(frame);
       }
       contributorScene.rafId = requestAnimationFrame(frame);
+    }
+
+    function spawnContributorBurst(stage, x, y) {
+      for (var i = 0; i < 6; i++) {
+        var p = document.createElement('span');
+        p.className = 'contrib-burst';
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        var ang = (Math.PI * 2 * i / 6) + (Math.random() * 0.6);
+        var dist = 16 + Math.random() * 20;
+        p.style.setProperty('--dx', Math.cos(ang) * dist + 'px');
+        p.style.setProperty('--dy', Math.sin(ang) * dist + 'px');
+        stage.appendChild(p);
+        setTimeout(function(el) {
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+        }, 680, p);
+      }
     }
 
     function renderContributors3D(data) {
@@ -1036,9 +1166,14 @@
         return;
       }
 
-      var maxCards = Math.min(data.length, 24);
-      var baseDepth = window.matchMedia && window.matchMedia('(max-width: 560px)').matches ? 88 : 122;
-      var depthStep = window.matchMedia && window.matchMedia('(max-width: 560px)').matches ? 14 : 22;
+      var compact = window.matchMedia && window.matchMedia('(max-width: 560px)').matches;
+      var perLayer = compact ? 12 : 14;
+      var maxLayers = 3;
+      var maxCards = Math.min(data.length, perLayer * maxLayers);
+      var baseDepth = compact ? 90 : 122;
+      var depthStep = compact ? 20 : 24;
+      var riseStep = compact ? 16 : 22;
+      var layersUsed = Math.ceil(maxCards / perLayer);
       var html = '<div class="contributors-stage" id="contributorsStage">'
         + '<div class="contributors-core">'
         + '<div class="core-title">Farewell Vibes</div>'
@@ -1048,16 +1183,18 @@
 
       for (var i = 0; i < maxCards; i++) {
         var c = data[i];
-        var angle = Math.round((360 / maxCards) * i);
-        var depth = baseDepth + ((i % 3) * depthStep);
+        var layer = Math.floor(i / perLayer);
+        var slot = i % perLayer;
+        var cardsInLayer = Math.min(perLayer, maxCards - (layer * perLayer));
+        var angle = Math.round((360 / cardsInLayer) * slot) + (layer * 9);
+        var depth = baseDepth + (layer * depthStep) + ((slot % 2) * 8);
+        var rise = (layer - ((layersUsed - 1) / 2)) * riseStep;
         var name = escapeHtml(c.name || 'Contributor');
         var initial = escapeHtml(getContributorInitial(c.name));
-        var amount = parseFloat(c.amount) || 0;
-        html += '<div class="contrib-card3d" style="--angle:' + angle + 'deg;--depth:' + depth + 'px;--delay:' + (i * 0.07).toFixed(2) + 's;">'
+        html += '<div class="contrib-card3d" style="--angle:' + angle + 'deg;--depth:' + depth + 'px;--rise:' + rise + 'px;--delay:' + (i * 0.07).toFixed(2) + 's;">'
           + '<div class="contrib-card3d-inner">'
           + '<div class="contrib-card-initial">' + initial + '</div>'
           + '<div class="contrib-card-name">' + name + '</div>'
-          + '<div class="contrib-card-amount">₹' + amount.toLocaleString('en-IN') + '</div>'
           + '</div>'
           + '</div>';
       }
