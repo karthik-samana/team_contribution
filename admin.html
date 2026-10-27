@@ -338,8 +338,16 @@
       <!-- Stats -->
       <div class="stats-row">
         <div class="stat-card">
-          <div class="label">Contributors</div>
+          <div class="label">Total Received</div>
+          <div class="value purple" id="statTotal">₹0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Total Transactions</div>
           <div class="value" id="statCount">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Current Event Txns</div>
+          <div class="value green" id="statCurrentCount">0</div>
         </div>
       </div>
 
@@ -512,6 +520,24 @@
             <span style="font-size: 13px; color: #888;" id="contribInfo">Loading...</span>
             <button class="save-btn" onclick="loadContributions()" style="padding: 6px 14px; font-size: 12px;">🔄 Refresh</button>
           </div>
+
+          <div style="font-size:12px; color:#666; margin: 6px 0 8px; font-weight:600;">Event-wise Transaction Summary</div>
+          <div style="overflow-x: auto; margin-bottom: 14px;">
+            <table class="contrib-table">
+              <thead>
+                <tr>
+                  <th>Event</th>
+                  <th>Transactions</th>
+                  <th>Total Received</th>
+                </tr>
+              </thead>
+              <tbody id="eventSummaryBody">
+                <tr><td colspan="3" class="no-data">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="font-size:12px; color:#666; margin: 6px 0 8px; font-weight:600;">All Transactions</div>
           <div style="overflow-x: auto;">
             <table class="contrib-table">
               <thead>
@@ -708,8 +734,21 @@
           if (result && result.success) {
             contributions = result.data || [];
             renderContributions();
+            renderEventSummary();
+            updateStats();
+          } else {
+            contributions = [];
+            renderContributions();
+            renderEventSummary();
             updateStats();
           }
+        })
+        .catch(function() {
+          contributions = [];
+          renderContributions();
+          renderEventSummary();
+          updateStats();
+          showToast('Could not load contributions', 'error');
         });
     }
 
@@ -750,12 +789,54 @@
       tbody.innerHTML = html;
     }
 
+    function renderEventSummary() {
+      var tbody = document.getElementById('eventSummaryBody');
+      if (!tbody) return;
+
+      if (!contributions || contributions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="no-data">No event transactions yet</td></tr>';
+        return;
+      }
+
+      var grouped = {};
+      contributions.forEach(function(c) {
+        var eventName = ((c.event_name || '').trim() || 'Unknown Event');
+        if (!grouped[eventName]) {
+          grouped[eventName] = { count: 0, total: 0 };
+        }
+        grouped[eventName].count += 1;
+        grouped[eventName].total += parseFloat(c.amount) || 0;
+      });
+
+      var eventNames = Object.keys(grouped).sort(function(a, b) {
+        return grouped[b].total - grouped[a].total;
+      });
+
+      var html = '';
+      eventNames.forEach(function(name) {
+        html += '<tr>'
+          + '<td><strong>' + escapeHtml(name) + '</strong></td>'
+          + '<td>' + grouped[name].count + '</td>'
+          + '<td style="font-weight:700;color:#667eea;">₹' + grouped[name].total.toLocaleString('en-IN') + '</td>'
+          + '</tr>';
+      });
+      tbody.innerHTML = html;
+    }
+
     function updateStats() {
-      // Filter for current event
+      var totalReceived = 0;
+      contributions.forEach(function(c) {
+        totalReceived += parseFloat(c.amount) || 0;
+      });
+
+      // Current event transaction count
       var eventContribs = contributions.filter(function(c) {
         return c.event_name === settings.event_name;
       });
-      document.getElementById('statCount').textContent = eventContribs.length;
+
+      document.getElementById('statTotal').textContent = '₹' + totalReceived.toLocaleString('en-IN');
+      document.getElementById('statCount').textContent = contributions.length;
+      document.getElementById('statCurrentCount').textContent = eventContribs.length;
     }
 
     // ================================================================
